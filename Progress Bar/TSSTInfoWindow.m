@@ -13,7 +13,10 @@
 @implementation TSSTInfoWindow
 
 
-- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
+- (id)initWithContentRect:(NSRect)contentRect
+                styleMask:(NSWindowStyleMask)aStyle
+                  backing:(NSBackingStoreType)bufferingType
+                    defer:(BOOL)flag
 {
     self = [super initWithContentRect: contentRect styleMask: NSBorderlessWindowMask backing: bufferingType defer: flag];
     if(self)
@@ -33,7 +36,7 @@
 	NSRect frameRect = NSMakeRect( point.x - offset - 10, point.y, size.width + 20, size.height + 25);
 	
 	[[self contentView] setCaretPosition: offset + 10];
-    [self setFrame: frameRect display: YES animate: YES];
+    [self setFrame: frameRect display: YES animate: NO];
 	[self invalidateShadow];
 }
 

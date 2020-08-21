@@ -28,7 +28,6 @@ Copyright (c) 2006-2009 Dancing Tortoise Software
 
 
 #import "TSSTPage.h"
-#import <UniversalDetector/UniversalDetector.h>
 #import "SimpleComicAppDelegate.h"
 #import "TSSTImageUtilities.h"
 #import "TSSTManagedGroup.h"
@@ -56,11 +55,11 @@ static NSSize monospaceCharacterSize;
 
 + (NSArray *)textExtensions
 {
-	static NSMutableArray * textTypes = nil;
+	static NSArray * textTypes = nil;
 
 	if(!textTypes)
 	{
-		textTypes = [[NSArray arrayWithObjects: @"txt", @"nfo", @"info", nil] retain];
+		textTypes = [@[@"txt", @"nfo", @"info"] retain];
 	}
 	
 	return textTypes;
@@ -70,7 +69,7 @@ static NSSize monospaceCharacterSize;
 + (void)initialize
 {
 	/* Figure out the size of a single monospace character to set the tab stops */
-	NSDictionary * fontAttributes = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont fontWithName: @"Monaco" size: 14], NSFontAttributeName, nil];
+	NSDictionary * fontAttributes = @{NSFontAttributeName: [NSFont fontWithName: @"Monaco" size: 14]};
 	monospaceCharacterSize = [@"A" boundingRectWithSize: NSZeroSize options: 0 attributes: fontAttributes].size;
 	
 	NSTextTab * tabStop;
@@ -89,8 +88,8 @@ static NSSize monospaceCharacterSize;
 	NSMutableParagraphStyle * style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[style setTabStops: tabStops];
 	
-	TSSTInfoPageAttributes = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont fontWithName: @"Monaco" size: 14],  NSFontAttributeName,
-							  style, NSParagraphStyleAttributeName, nil];
+	TSSTInfoPageAttributes = @{NSFontAttributeName: [NSFont fontWithName: @"Monaco" size: 14],
+							  NSParagraphStyleAttributeName: style};
 	[TSSTInfoPageAttributes retain];
 	
 	[style release];
@@ -153,9 +152,9 @@ static NSSize monospaceCharacterSize;
 	if(!NSEqualSizes(NSZeroSize, imageSize))
 	{
 		aspect = imageSize.width / imageSize.height;
-		[self setValue: [NSNumber numberWithShort: imageSize.width] forKey: @"width"];
-		[self setValue: [NSNumber numberWithShort: imageSize.height] forKey: @"height"];
-		[self setValue: [NSNumber numberWithFloat: aspect] forKey: @"aspectRatio"];
+		[self setValue: @(imageSize.width) forKey: @"width"];
+		[self setValue: @(imageSize.height) forKey: @"height"];
+		[self setValue: @(aspect) forKey: @"aspectRatio"];
 	}	
 }
 
@@ -189,7 +188,7 @@ static NSSize monospaceCharacterSize;
 {
 	[thumbLock lock];
 	NSImage * managedImage = [self pageImage];
-	NSImage * thumbnail = nil;
+	NSData * thumbnailData = nil;
 	NSSize pixelSize = [managedImage size];
 	if(managedImage)
 	{
@@ -202,12 +201,12 @@ static NSSize monospaceCharacterSize;
 					   operation: NSCompositeSourceOver 
 						fraction: 1.0];
 		[temp unlockFocus];
-		thumbnail = [[temp TIFFRepresentation] retain];
+		thumbnailData = [[temp TIFFRepresentation] retain];
 		[temp release];
 	}
 	[thumbLock unlock];
 	
-	return [thumbnail autorelease];
+	return [thumbnailData autorelease];
 }
 
 
@@ -236,9 +235,7 @@ static NSSize monospaceCharacterSize;
     }
     else
     {
-        [imageFromData setScalesWhenResized: YES];
         [imageFromData setCacheMode: NSImageCacheNever];
-        
         [imageFromData setSize: imageSize];
         [imageFromData setCacheMode: NSImageCacheDefault];
     }
@@ -259,9 +256,12 @@ static NSSize monospaceCharacterSize;
 		textData = [NSData dataWithContentsOfFile: [self valueForKey: @"imagePath"]];
 	}
 	
-	UniversalDetector * encodingDetector = [UniversalDetector detector];
-	[encodingDetector analyzeData: textData];
-	NSString * text = [[NSString alloc] initWithData: textData encoding: [encodingDetector encoding]];
+    BOOL lossyConversion = NO;
+    NSStringEncoding stringEncoding = [NSString stringEncodingForData: textData
+                                                      encodingOptions: nil
+                                                      convertedString: nil
+                                                  usedLossyConversion: &lossyConversion];
+	NSString * text = [[NSString alloc] initWithData: textData encoding: stringEncoding];
 //	int lineCount = 0;
 	NSRect lineRect;
 	NSRect pageRect = NSZeroRect;

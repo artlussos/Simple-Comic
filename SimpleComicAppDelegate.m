@@ -29,12 +29,10 @@
 
 #import "SimpleComicAppDelegate.h"
 #import <XADMaster/XADArchive.h>
-#import <Carbon/Carbon.h>
 #import "TSSTSessionWindowController.h"
 #import "TSSTSortDescriptor.h"
 #import "TSSTPage.h"
 #import "TSSTManagedGroup.h"
-#import "TSSTManagedBookmarkGroup.h"
 #import "TSSTManagedSession.h"
 #import "TSSTCustomValueTransformers.h"
 #import "DTPreferencesController.h"
@@ -148,7 +146,7 @@ static NSArray * allAvailableStringEncodings(void)
             encoding = 101;
         }
 		
-        [codeNumbers addObject: [NSNumber numberWithUnsignedInteger: encoding]];
+        [codeNumbers addObject: @(encoding)];
         ++counter;
     }
     
@@ -180,24 +178,24 @@ static NSArray * allAvailableStringEncodings(void)
 + (void)initialize
 {
     NSMutableDictionary* standardDefaults = [NSMutableDictionary dictionary];
-	[standardDefaults setObject: [NSNumber numberWithBool: NO] forKey: TSSTPageOrder];
-	[standardDefaults setObject: [NSNumber numberWithFloat: 0.1] forKey: TSSTPageZoomRate];
-	[standardDefaults setObject: [NSNumber numberWithInt: 1] forKey: TSSTPageScaleOptions];
-    [standardDefaults setObject: [NSNumber numberWithInt: 100] forKey: TSSTThumbnailSize];
-    [standardDefaults setObject: [NSNumber numberWithBool: YES] forKey: TSSTTwoPageSpread];
-    [standardDefaults setObject: [NSNumber numberWithBool: NO] forKey: TSSTIgnoreDonation];
-    [standardDefaults setObject: [NSNumber numberWithBool: YES] forKey: TSSTConstrainScale];
-    [standardDefaults setObject: [NSNumber numberWithBool: YES] forKey: TSSTScrollersVisible];
-    [standardDefaults setObject: [NSNumber numberWithBool: YES] forKey: TSSTSessionRestore];
-    [standardDefaults setObject: [NSNumber numberWithBool: YES] forKey: TSSTAutoPageTurn];
-	[standardDefaults setObject: [NSArchiver archivedDataWithRootObject: [NSColor whiteColor]] forKey: TSSTBackgroundColor];
-    [standardDefaults setObject: [NSNumber numberWithBool: YES] forKey: TSSTWindowAutoResize];
-    [standardDefaults setObject: [NSNumber numberWithInt: 500] forKey: TSSTLoupeDiameter];
-	[standardDefaults setObject: [NSNumber numberWithFloat: 2.0] forKey: TSSTLoupePower];
- 	[standardDefaults setObject: [NSNumber numberWithBool: YES] forKey: TSSTStatusbarVisible];
-    [standardDefaults setObject: [NSNumber numberWithBool: YES] forKey: TSSTLonelyFirstPage];
-	[standardDefaults setObject: [NSNumber numberWithBool: YES] forKey: TSSTNestedArchives];
-	[standardDefaults setObject: [NSNumber numberWithInt: 0] forKey: TSSTUpdateSelection];
+	standardDefaults[TSSTPageOrder] = @NO;
+	standardDefaults[TSSTPageZoomRate] = @0.1f;
+	standardDefaults[TSSTPageScaleOptions] = @1;
+    standardDefaults[TSSTThumbnailSize] = @100;
+    standardDefaults[TSSTTwoPageSpread] = @YES;
+    standardDefaults[TSSTIgnoreDonation] = @NO;
+    standardDefaults[TSSTConstrainScale] = @YES;
+    standardDefaults[TSSTScrollersVisible] = @YES;
+    standardDefaults[TSSTSessionRestore] = @YES;
+    standardDefaults[TSSTAutoPageTurn] = @YES;
+	standardDefaults[TSSTBackgroundColor] = [NSArchiver archivedDataWithRootObject: [NSColor whiteColor]];
+    standardDefaults[TSSTWindowAutoResize] = @YES;
+    standardDefaults[TSSTLoupeDiameter] = @500;
+	standardDefaults[TSSTLoupePower] = @2.0f;
+ 	standardDefaults[TSSTStatusbarVisible] = @YES;
+    standardDefaults[TSSTLonelyFirstPage] = @YES;
+	standardDefaults[TSSTNestedArchives] = @YES;
+	standardDefaults[TSSTUpdateSelection] = @0;
 	
 	NSUserDefaultsController * sharedDefaultsController = [NSUserDefaultsController sharedUserDefaultsController];
 	[sharedDefaultsController setInitialValues: standardDefaults];
@@ -308,8 +306,12 @@ static NSArray * allAvailableStringEncodings(void)
     if(![self saveContext])
     {
         // Error handling wasn't implemented. Fall back to displaying a "quit anyway" panel.
-        int alertReturn = NSRunAlertPanel(nil, @"Could not save changes while quitting. Quit anyway?" , @"Quit anyway", @"Cancel", nil);
-        if (alertReturn == NSAlertAlternateReturn)
+        NSAlert * alertPanel = [NSAlert new];
+        alertPanel.messageText = @"Quit without saving session?";
+        alertPanel.informativeText = @"Could not save session while quitting.";
+        [alertPanel addButtonWithTitle: @"Quit?"];
+        [alertPanel addButtonWithTitle: @"Cancel"];
+        if ([alertPanel runModal] == NSAlertSecondButtonReturn)
         {
             reply = NSTerminateCancel;	
         }
@@ -466,8 +468,7 @@ static NSArray * allAvailableStringEncodings(void)
 		}
     }
 	
-	NSDictionary * storeOptions = [NSDictionary dictionaryWithObject: [NSNumber numberWithBool: YES] 
-															  forKey: NSMigratePersistentStoresAutomaticallyOption];
+	NSDictionary * storeOptions = @{NSMigratePersistentStoresAutomaticallyOption: @YES};
     url = [NSURL fileURLWithPath: [applicationSupportFolder stringByAppendingPathComponent: @"SimpleComic.sql"]];
 	
 	error = nil;
@@ -477,9 +478,9 @@ static NSArray * allAvailableStringEncodings(void)
 		NSLog(@"%@",[error localizedDescription]);
 	}    
 
-	if(![[storeInfo valueForKey: @"viewVersion"] isEqualToString: @"Version 1706"])
+	if(![[storeInfo valueForKey: @"viewVersion"] isEqualToString: @"Version 1708"])
 	{
-		if(![fileManager removeItemAtPath: [url path] error: &error])
+		if(![fileManager removeItemAtURL: url error: &error])
 		{
 			NSLog(@"%@",[error localizedDescription]);
 		}
@@ -492,7 +493,7 @@ static NSArray * allAvailableStringEncodings(void)
         [[NSApplication sharedApplication] presentError: error];
     }    
 	
-	[SimpleComicAppDelegate setMetadata: @"Version 1706" forKey: @"viewVersion" onStoreWithURL: url managedBy: persistentStoreCoordinator];
+	[SimpleComicAppDelegate setMetadata: @"Version 1708" forKey: @"viewVersion" onStoreWithURL: url managedBy: persistentStoreCoordinator];
 
     return persistentStoreCoordinator;
 }
@@ -525,7 +526,7 @@ static NSArray * allAvailableStringEncodings(void)
 {
 	
     NSArray * paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-    NSString * basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : NSTemporaryDirectory();
+    NSString * basePath = ([paths count] > 0) ? paths[0] : NSTemporaryDirectory();
     return [basePath stringByAppendingPathComponent: @"Simple Comic"];
 }
 
@@ -539,31 +540,19 @@ static NSArray * allAvailableStringEncodings(void)
         [controller updateSessionObject];
     }
     
-    NSError * error;
-    NSManagedObjectContext * context = [self managedObjectContext];
-	[context retain];
-	[context lock];
-    BOOL saved = NO;
-    if (context != nil)
-	{
-        if ([context commitEditing])
-		{
-            if (![context save: &error])
-			{
-				// This default error handling implementation should be changed to make sure the error presented includes application specific error recovery. 
-				// For now, simply display 2 panels.
-				[[NSApplication sharedApplication] presentError: error];
-            }
-            else 
-            {
-                saved = YES;
-            }
-        }
+    NSManagedObjectContext *context = self.managedObjectContext;
+    
+    if (![context commitEditing]) {
+        NSLog(@"%@:%@ unable to commit editing before saving", [self class], NSStringFromSelector(_cmd));
     }
-	
-	[context unlock];
-	[context release];
-    return saved;
+    
+    NSError *error = nil;
+    if (context.hasChanges && ![context save:&error]) {
+        [[NSApplication sharedApplication] presentError:error];
+        return NO;
+    }
+    
+    return YES;
 }
 
 
@@ -715,13 +704,26 @@ static NSArray * allAvailableStringEncodings(void)
 	NSOpenPanel * addPagesModal = [NSOpenPanel openPanel];
 	[addPagesModal setAllowsMultipleSelection: YES];
     [addPagesModal setCanChooseDirectories: YES];
-	
+    NSMutableArray * filePaths;
+    NSArray * fileURLs;
+	NSURL * fileURL;
+    NSString * filePath;
+    
 	NSMutableArray * allAllowedFilesExtensions = [NSMutableArray arrayWithArray: [TSSTManagedArchive archiveExtensions]];
 	[allAllowedFilesExtensions addObjectsFromArray: [TSSTPage imageExtensions]];
-    
-	if([addPagesModal runModalForTypes: allAllowedFilesExtensions] !=  NSCancelButton)
+    [addPagesModal setAllowedFileTypes:allAllowedFilesExtensions];
+
+	if([addPagesModal runModal] !=  NSModalResponseCancel)
 	{
-		TSSTManagedSession * session = [self newSessionWithFiles: [addPagesModal filenames]];
+        filePaths = [NSMutableArray new];
+        fileURLs = [addPagesModal URLs];
+        
+        for (fileURL in fileURLs) {
+            filePath = [fileURL path];
+            [filePaths addObject:filePath];
+        }
+        
+		TSSTManagedSession * session = [self newSessionWithFiles: filePaths];
 		[self windowForSession: session];
 	}
 }
@@ -731,7 +733,7 @@ static NSArray * allAvailableStringEncodings(void)
 /*  Kills the password and encoding modals if the OK button was  clicked. */
 - (IBAction)modalOK:(id)sender
 {
-    [NSApp stopModalWithCode: NSOKButton]; 
+    [NSApp stopModalWithCode: NSModalResponseOK];
 }
 
 
@@ -739,7 +741,7 @@ static NSArray * allAvailableStringEncodings(void)
 /*  Kills the password and encoding modals if the Cancel button was clicked. */
 - (IBAction)modalCancel:(id)sender
 {
-    [NSApp stopModalWithCode: NSCancelButton]; 
+    [NSApp stopModalWithCode: NSModalResponseCancel]; 
 }
 
 
@@ -832,7 +834,7 @@ static NSArray * allAvailableStringEncodings(void)
 {
     NSString* password = nil;
 	[passwordField setStringValue: @""];
-    if([NSApp runModalForWindow: passwordPanel] != NSCancelButton)
+    if([NSApp runModalForWindow: passwordPanel] != NSModalResponseCancel)
     {
         password = [passwordField stringValue];
     }
@@ -855,14 +857,14 @@ static NSArray * allAvailableStringEncodings(void)
         [self updateEncodingMenuTestedAgainst: data];
         NSArray * encodingIdentifiers = [[encodingMenu itemArray] valueForKey: @"representedObject"];
 		
-		NSUInteger index = [encodingIdentifiers indexOfObject: [NSNumber numberWithUnsignedInteger: guess]];
+		NSUInteger index = [encodingIdentifiers indexOfObject: @(guess)];
 		NSUInteger counter = 0;
 //		NSStringEncoding encoding;
 		NSNumber * encoding;
 		while(!testText)
 		{
 			[testText release];
-			encoding = [encodingIdentifiers objectAtIndex: counter];
+			encoding = encodingIdentifiers[counter];
 			if ([encoding class] != [NSNull class]) {
 				testText = [[NSString alloc] initWithData: data encoding: [encoding unsignedIntegerValue]];
 			}
@@ -878,7 +880,7 @@ static NSArray * allAvailableStringEncodings(void)
 		
         [self testEncoding: self];
 		guess = NSNotFound;
-        if([NSApp runModalForWindow: encodingPanel] != NSCancelButton)
+        if([NSApp runModalForWindow: encodingPanel] != NSModalResponseCancel)
         {
             guess = [[[encodingMenu itemAtIndex: encodingSelection] representedObject] unsignedIntegerValue];
         }

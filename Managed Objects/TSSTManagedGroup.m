@@ -12,7 +12,6 @@
 #import <XADMaster/XADArchive.h>
 #import <Quartz/Quartz.h>
 #import "TSSTImageUtilities.h"
-#import "BDAlias.h"
 #import "TSSTPage.h"
 
 @implementation TSSTManagedGroup
@@ -28,18 +27,10 @@
 
 - (void)awakeFromFetch
 {
-//	NSLog(@"wake");
 	[super awakeFromFetch];
     groupLock = [NSLock new];
     instance = nil;
-//	NSData * aliasData = [self valueForKey: @"pathData"];
-//	
-//    if (aliasData != nil)
-//    {
-//        BDAlias * savedAlias = [[BDAlias alloc] initWithData: aliasData];
-//		[self setValue: savedAlias forKey: @"alias"];
-//		[savedAlias release];
-//    }
+
 }
 
 
@@ -68,24 +59,43 @@
 
 - (void)setPath:(NSString *)newPath
 {
-	BDAlias * newAlias = [[BDAlias alloc] initWithPath: newPath];
-	[self setValue: [newAlias aliasData] forKey: @"pathData"];
-	[newAlias release];
+    NSError * urlError = nil;
+    NSURL * fileURL = [[NSURL alloc] initFileURLWithPath: newPath];
+    NSData * bookmarkData = [fileURL bookmarkDataWithOptions: NSURLBookmarkCreationMinimalBookmark
+                              includingResourceValuesForKeys: nil
+                                               relativeToURL: nil
+                                                       error: &urlError];
+    if (bookmarkData == nil || urlError != nil) {
+        bookmarkData = nil;
+        [NSApp presentError: urlError];
+    }
+	[self setValue: bookmarkData forKey: @"pathData"];
+	[fileURL release];
 }
 
 
 
 - (NSString *)path
 {
-	BDAlias * alias = [[BDAlias alloc] initWithData: [self valueForKey: @"pathData"]];
-	NSString * hardPath = [alias fullPath];
-	[alias release];
-	
-	if(!hardPath)
-	{
-		NSLog(@"Could not find image group");
-		[[self managedObjectContext] deleteObject: self];
-	}
+    NSError * urlError = nil;
+    BOOL stale = NO;
+    NSURL * fileURL = [NSURL URLByResolvingBookmarkData: [self valueForKey: @"pathData"]
+                                                options: NSURLBookmarkResolutionWithoutUI
+                                          relativeToURL: nil
+                                    bookmarkDataIsStale: &stale
+                                                  error: &urlError];
+    
+    
+	NSString * hardPath = nil;
+    
+    if (fileURL == nil || urlError != nil) {
+        fileURL = nil;
+        [[self managedObjectContext] deleteObject: self];
+        [NSApp presentError: urlError];
+    }
+    else {
+        hardPath = [fileURL path];
+    }
 	
 	return hardPath;
 }
@@ -101,6 +111,12 @@
 
 - (NSData *)dataForPageIndex:(NSInteger)index
 {
+    return nil;
+}
+
+- (NSData *)dataForPageName:(NSString *)name
+{
+    
     return nil;
 }
 
@@ -162,7 +178,7 @@
 			{
 				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
 				[nestedDescription setValue: fullPath forKey: @"imagePath"];
-				[nestedDescription setValue: [NSNumber numberWithBool: YES] forKey: @"text"];
+				[nestedDescription setValue: @YES forKey: @"text"];
 			}
 			if(nestedDescription)
 			{
@@ -197,7 +213,7 @@
 	static NSArray * extensions = nil;
 	if(!extensions)
 	{
-		extensions = [[NSArray arrayWithObjects: @"rar", @"cbr", @"zip", @"cbz", @"7z", @"cb7", @"lha", @"lzh", nil] retain];
+		extensions = [@[@"rar", @"cbr", @"zip", @"cbz", @"7z", @"cb7", @"lha", @"lzh", @"tar"] retain];
 	}
 	
 	return extensions;
@@ -210,7 +226,7 @@
 
 	if(!extensions)
 	{
-		extensions = [[NSArray arrayWithObjects: @"cbr", @"cbz", nil] retain];
+		extensions = [@[@"cbr", @"cbz"] retain];
 	}
 	
 	return extensions;
@@ -276,7 +292,7 @@
 	else
 	{
 		NSString * name = [[self instance] nameOfEntry: index];
-		NSString * fileName = [NSString stringWithFormat:@"%i.%@", index, [name pathExtension]];
+		NSString * fileName = [NSString stringWithFormat:@"%li.%@", (long)index, [name pathExtension]];
 		fileName = [solidDirectory stringByAppendingPathComponent: fileName];
 		if(![[NSFileManager defaultManager] fileExistsAtPath: fileName])
 		{
@@ -294,6 +310,11 @@
     return [[imageData retain] autorelease];
 }
 
+- (NSData *)dataForPageName:(NSString *)name
+{
+    
+    return nil;
+}
 
 
 - (NSManagedObject *)topLevelGroup
@@ -346,14 +367,14 @@
             {
                 nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
 				[nestedDescription setValue: fileName forKey: @"imagePath"];
-				[nestedDescription setValue: [NSNumber numberWithInt: counter] forKey: @"index"];
+				[nestedDescription setValue: @(counter) forKey: @"index"];
             }
             else if([[[NSUserDefaults standardUserDefaults] valueForKey: TSSTNestedArchives] boolValue] && [[TSSTManagedArchive archiveExtensions] containsObject: extension])
             {
                 fileData = [imageArchive contentsOfEntry: counter];
                 nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Archive" inManagedObjectContext: [self managedObjectContext]];
                 [nestedDescription setValue: fileName forKey: @"name"];
-                [nestedDescription setValue: [NSNumber numberWithBool: YES] forKey: @"nested"];
+                [nestedDescription setValue: @YES forKey: @"nested"];
 				
                 collision = 0;
                 do {
@@ -375,8 +396,8 @@
 			{
 				nestedDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
 				[nestedDescription setValue: fileName forKey: @"imagePath"];
-				[nestedDescription setValue: [NSNumber numberWithInt: counter] forKey: @"index"];
-				[nestedDescription setValue: [NSNumber numberWithBool: YES] forKey: @"text"];
+				[nestedDescription setValue: @(counter) forKey: @"index"];
+				[nestedDescription setValue: @YES forKey: @"text"];
 			}
             else if([extension isEqualToString: @"pdf"])
             {
@@ -393,7 +414,7 @@
 				[fileData writeToFile: archivePath atomically: YES];
 
                 [nestedDescription setValue: archivePath forKey: @"path"];
-                [nestedDescription setValue: [NSNumber numberWithBool: YES] forKey: @"nested"];
+                [nestedDescription setValue: @YES forKey: @"nested"];
 				[(TSSTManagedPDF *)nestedDescription pdfContents];
             }
 			
@@ -427,7 +448,7 @@
         return;
     }
     
-    password = [[NSApp delegate] passwordForArchiveWithPath: [self valueForKey: @"path"]];
+    password = [(SimpleComicAppDelegate *)[NSApp delegate] passwordForArchiveWithPath: [self valueForKey: @"path"]];
     [archive setPassword: password];
     
     [self setValue: password forKey: @"password"];
@@ -479,6 +500,12 @@
     return [imageData autorelease];
 }
 
+- (NSData *)dataForPageName:(NSString *)name
+{
+    
+    return nil;
+}
+
 
 /*  Creates an image managedobject for every "page" in a pdf. */
 - (void)pdfContents
@@ -492,7 +519,7 @@
     {
         imageDescription = [NSEntityDescription insertNewObjectForEntityForName: @"Image" inManagedObjectContext: [self managedObjectContext]];
         [imageDescription setValue: [NSString stringWithFormat: @"%i", pageNumber + 1] forKey: @"imagePath"];
-        [imageDescription setValue: [NSNumber numberWithInt: pageNumber] forKey: @"index"];
+        [imageDescription setValue: @(pageNumber) forKey: @"index"];
         [pageSet addObject: imageDescription];
     }
 	[self setValue: pageSet forKey: @"images"];

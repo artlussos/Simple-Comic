@@ -45,7 +45,7 @@
 - (void)awakeFromNib
 {
 	/* Doing this so users can drag archives into the view. */
-    [self registerForDraggedTypes: [NSArray arrayWithObject: NSFilenamesPboardType]];
+    [self registerForDraggedTypes: @[NSFilenamesPboardType]];
 }
 
 
@@ -132,9 +132,9 @@
         frameCount = [[testImageRep valueForProperty: NSImageFrameCount] intValue];
         if(frameCount > 1)
         {
-            animationInfo = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt: 1], @"imageNumber",
-                firstPageImage, @"pageImage",
-                [testImageRep valueForProperty: NSImageLoopCount], @"loopCount",nil];
+            animationInfo = @{@"imageNumber": @1,
+                @"pageImage": firstPageImage,
+                @"loopCount": [testImageRep valueForProperty: NSImageLoopCount]};
             frameDuration = [[testImageRep valueForProperty: NSImageCurrentFrameDuration] floatValue];
             frameDuration = frameDuration > 0.1 ? frameDuration : 0.1;
             [NSTimer scheduledTimerWithTimeInterval: frameDuration
@@ -167,10 +167,10 @@
     if(currentFrame == 0 && loopCount > 1)
     {
         --loopCount;
-        [animationInfo setValue: [NSNumber numberWithInt: loopCount] forKey: @"loopCount"];
+        [animationInfo setValue: @(loopCount) forKey: @"loopCount"];
     }
     
-    [testImageRep setProperty: NSImageCurrentFrame withValue: [NSNumber numberWithInt: currentFrame]];
+    [testImageRep setProperty: NSImageCurrentFrame withValue: @(currentFrame)];
     if(loopCount != 1)
     {
         frameDuration = [[testImageRep valueForProperty: NSImageCurrentFrameDuration] floatValue];
@@ -248,7 +248,7 @@
 	{
 		NSArray * filePaths = [pboard propertyListForType: NSFilenamesPboardType];
         [sessionController updateSessionObject];
-		[[NSApp delegate] addFiles: filePaths toSession: [sessionController session]];
+		[(SimpleComicAppDelegate *)[NSApp delegate] addFiles: filePaths toSession: [sessionController session]];
 		return YES;
 	}
 	
@@ -337,13 +337,11 @@
 	{
 		NSMutableParagraphStyle * style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 		[style setAlignment: NSCenterTextAlignment];
-		NSDictionary * stringAttributes = [NSDictionary dictionaryWithObjectsAndKeys: 
-										   [NSFont fontWithName: @"Lucida Grande" size: 24], NSFontAttributeName, 
-										   [NSColor colorWithCalibratedWhite: 1 alpha: 1.0], NSForegroundColorAttributeName,
-										   style, NSParagraphStyleAttributeName,
-										   nil];
+		NSDictionary * stringAttributes = @{NSFontAttributeName: [NSFont fontWithName: @"Lucida Grande" size: 24], 
+										   NSForegroundColorAttributeName: [NSColor colorWithCalibratedWhite: 1 alpha: 1.0],
+										   NSParagraphStyleAttributeName: style};
 		[style release];
-		NSString * selectionText = [NSString stringWithString: @"Click to select page"];
+		NSString * selectionText = @"Click to select page";
 		if([sessionController pageSelectionCanCrop])
 		{
 			selectionText = [selectionText stringByAppendingString: @"\nDrag to crop"];
@@ -363,14 +361,6 @@
         [[NSColor keyboardFocusIndicatorColor] set];
         [NSBezierPath strokeRect: [[self enclosingScrollView] documentVisibleRect]];
     }
-}
-
-
-
-- (void)viewDidEndLiveResize
-{
-    [self setNeedsDisplay: YES];
-    [super viewDidEndLiveResize];
 }
 
 
@@ -751,8 +741,8 @@
 	
 	int modifier = [theEvent modifierFlags];
 	NSUserDefaults * defaultsController = [NSUserDefaults standardUserDefaults];
-//	int scaling = [[[sessionController session] valueForKey: TSSTPageScaleOptions] intValue];
-//	scaling = [sessionController currentPageIsText] ? 2 : scaling;
+	int scaling = [[[sessionController session] valueForKey: TSSTPageScaleOptions] intValue];
+	scaling = [sessionController currentPageIsText] ? 2 : scaling;
 		
 	if((modifier & NSCommandKeyMask) && [theEvent deltaY])
 	{
@@ -760,74 +750,47 @@
 		loupeDiameter += [theEvent deltaY] > 0 ? 30 : -30;
 		loupeDiameter = loupeDiameter < 150 ? 150 : loupeDiameter;
 		loupeDiameter = loupeDiameter > 500 ? 500 : loupeDiameter;
-		[defaultsController setValue: [NSNumber numberWithInt: loupeDiameter] forKey: TSSTLoupeDiameter];
+		[defaultsController setValue: @(loupeDiameter) forKey: TSSTLoupeDiameter];
 	}
 	else if((modifier & NSAlternateKeyMask) && [theEvent deltaY])
 	{
-		int loupePower = [[defaultsController valueForKey: TSSTLoupePower] floatValue];
+		float loupePower = [[defaultsController valueForKey: TSSTLoupePower] floatValue];
 		loupePower += [theEvent deltaY] > 0 ? 1 : -1;
 		loupePower = loupePower < 2 ? 2 : loupePower;
 		loupePower = loupePower > 6 ? 6 : loupePower;
-		[defaultsController setValue: [NSNumber numberWithFloat: loupePower] forKey: TSSTLoupePower];
+		[defaultsController setValue: @(loupePower) forKey: TSSTLoupePower];
 	}
-//	else if(scaling == 1)
-//	{
-//		if([theEvent deltaX] > 0)
-//		{
-//			scrollwheel.left += [theEvent deltaX];
-//			scrollwheel.right = 0;
-//			scrollwheel.up = 0;
-//			scrollwheel.down = 0;
-//		}
-//		else if([theEvent deltaX] < 0)
-//		{
-//			scrollwheel.right += [theEvent deltaX];
-//			scrollwheel.left = 0;
-//			scrollwheel.up = 0;
-//			scrollwheel.down = 0;
-//		}
-//		else if([theEvent deltaY] > 0)
-//		{
-//			scrollwheel.up += [theEvent deltaY];
-//			scrollwheel.left = 0;
-//			scrollwheel.right = 0;
-//			scrollwheel.down = 0;
-//		}
-//		else if([theEvent deltaY] < 0)
-//		{
-//			scrollwheel.down += [theEvent deltaY];
-//			scrollwheel.left = 0;
-//			scrollwheel.right = 0;
-//			scrollwheel.up = 0;
-//		}
-//				
-//		if(scrollwheel.left > 0.1)
-//		{
-//			[sessionController pageLeft: self];
-//			scrollwheel.left = 0;
-//		}
-//		else if(scrollwheel.right < -0.1)
-//		{
-//			[sessionController pageRight: self];
-//			scrollwheel.right = 0;
-//		}
-//		else if(scrollwheel.up > 0.1)
-//		{
-//			[sessionController previousPage];
-//		}
-//		else if(scrollwheel.down < -0.1)
-//		{
-//			[sessionController nextPage];
-//		}
-//
-//	}
+	else if(scaling == 1)
+	{
+        float deltaX = [theEvent deltaX];
+        if (deltaX != 0.0)
+        {
+            [theEvent trackSwipeEventWithOptions:NSEventSwipeTrackingLockDirection
+                        dampenAmountThresholdMin:-1.0
+                                             max:1.0
+                                    usingHandler:^(CGFloat gestureAmount, NSEventPhase phase, BOOL isComplete, BOOL *stop) {
+                                    }];
+        }
+        
+        
+        if (deltaX > 0.0)
+        {
+            [sessionController pageLeft: self];
+        }
+        else if (deltaX < 0.0)
+        {
+            [sessionController pageRight: self];
+        }
+
+	}
 	else
 	{
 		NSRect visible = [[self enclosingScrollView] documentVisibleRect];
 		NSPoint scrollPoint = NSMakePoint(NSMinX(visible) - ([theEvent deltaX] * 5), NSMinY(visible) + ([theEvent deltaY] * 5));
 		[self scrollPoint: scrollPoint];
 	}
-	
+
+
     [sessionController refreshLoupePanel];
 }
 
@@ -845,7 +808,7 @@
 	
     int modifier = [event modifierFlags];
     BOOL shiftKey = modifier & NSShiftKeyMask ? YES : NO;
-    NSNumber * charNumber = [NSNumber numberWithUnsignedInt: [[event charactersIgnoringModifiers] characterAtIndex: 0]];
+    NSNumber * charNumber = @([[event charactersIgnoringModifiers] characterAtIndex: 0]);
     NSRect visible = [[self enclosingScrollView] documentVisibleRect];
     NSPoint scrollPoint = visible.origin;
     BOOL scrolling = NO;
@@ -933,7 +896,7 @@
         [self scrollPoint: scrollPoint];
         [sessionController refreshLoupePanel];
         NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys: 
-            [NSDate date], @"lastTime", [NSNumber numberWithBool: shiftKey], @"accelerate",
+            [NSDate date], @"lastTime", @(shiftKey), @"accelerate",
             nil, @"leftTurnStart", nil, @"rightTurnStart", nil];
         scrollTimer = [NSTimer scheduledTimerWithTimeInterval: 1/10
                                                        target: self 
@@ -1035,7 +998,7 @@
 
 - (void)keyUp:(NSEvent *)event
 {
-    NSNumber * charNumber = [NSNumber numberWithUnsignedInt: [[event charactersIgnoringModifiers] characterAtIndex: 0]];
+    NSNumber * charNumber = @([[event charactersIgnoringModifiers] characterAtIndex: 0]);
     switch ([charNumber unsignedIntValue])
     {
         case NSUpArrowFunctionKey:
@@ -1189,8 +1152,8 @@
 
 - (void)rightMouseDown:(NSEvent *)theEvent
 {
-	BOOL loupe = [[[sessionController session] valueForKey: @"loupe"] boolValue];
-	[[sessionController session] setValue: [NSNumber numberWithBool: !loupe] forKey: @"loupe"];
+	BOOL loupe = ![[[sessionController session] valueForKey: @"loupe"] boolValue];
+	[[sessionController session] setValue: @(loupe) forKey: @"loupe"];
 }
 
 
@@ -1353,52 +1316,27 @@
 
 - (void)magnifyWithEvent:(NSEvent *)event
 {
-	BOOL isFullscreen = [[[sessionController session] valueForKey: TSSTFullscreen] boolValue];
-	if (([event deltaZ] > 5) && !isFullscreen)
-	{
-		[[sessionController session] setValue: [NSNumber numberWithBool: YES] forKey: TSSTFullscreen];
-	}
-	else if(([event deltaZ] < -5) && isFullscreen)
-	{
-		[[sessionController session] setValue: [NSNumber numberWithBool: NO] forKey: TSSTFullscreen];
-	}
+    TSSTManagedSession * session = [sessionController session];
+    int scalingOption = [[session valueForKey: TSSTPageScaleOptions] intValue];
+    float previousZoom = [[session valueForKey: TSSTZoomLevel] floatValue];
+    if(scalingOption != 0)
+    {
+        previousZoom = NSWidth([self imageBounds]) / [self combinedImageSizeForZoom: 1].width;
+    }
+    
+    previousZoom += ([event magnification] * 2);
+    previousZoom = previousZoom < 5 ? previousZoom : 5;
+    previousZoom = previousZoom > .25 ? previousZoom : .25;
+    [session setValue: @(previousZoom) forKey: TSSTZoomLevel];
+    [session setValue: @0 forKey: TSSTPageScaleOptions];
+    
+    [self resizeView];
 }
-
-//int scalingOption = [[[sessionController session] valueForKey: TSSTPageScaleOptions] intValue];
-//float previousZoom = [[[sessionController session] valueForKey: TSSTZoomLevel] floatValue];
-//if(scalingOption != 0)
-//{
-//	previousZoom = NSWidth([self imageBounds]) / [self combinedImageSizeForZoom: 1].width;
-//}
-//
-//previousZoom += [event magnification]/2;
-//previousZoom = previousZoom < 0.1 ? 0.1 : previousZoom;
-//[[sessionController session] setValue: [NSNumber numberWithFloat: previousZoom] forKey: TSSTZoomLevel];
-//[[sessionController session] setValue: [NSNumber numberWithInt: 0] forKey: TSSTPageScaleOptions];
-//
-//[self resizeView];
-//[sessionController refreshLoupePanel];
-
-
-//- (void)touchesBeganWithEvent:(NSEvent *)event
-//{
-//	NSLog(@"start");
-//}
-//
-//
-//- (void)touchesEndedWithEvent:(NSEvent *)event
-//{
-//	NSLog(@"end");
-//	if ([event type] == NSEventTypeMagnify)
-//	{
-//		NSLog(@"end magnify");
-//	}
-//}
 
 
 - (BOOL)dragIsPossible
 {
-    return ([self horizontalScrollIsPossible] || 
+    return ([self horizontalScrollIsPossible] ||
 			[self verticalScrollIsPossible] && 
 			![sessionController pageSelectionInProgress]);
 }
