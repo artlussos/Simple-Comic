@@ -4,34 +4,33 @@
 
 extern NSString *CSSizeOfSegmentUnknownException;
 
-@interface CSMultiHandle:CSHandle
-{
-	NSArray *handles;
-	int currhandle;
+@interface CSMultiHandle : CSHandle {
+    NSArray *handles;
+    int currhandle;
 }
 
-+(CSMultiHandle *)multiHandleWithHandleArray:(NSArray *)handlearray;
-+(CSMultiHandle *)multiHandleWithHandles:(CSHandle *)firsthandle,...;
++ (CSMultiHandle *)multiHandleWithHandleArray:(NSArray *)handlearray;
++ (CSMultiHandle *)multiHandleWithHandles:(CSHandle *)firsthandle, ...;
 
 // Initializers
--(id)initWithHandles:(NSArray *)handlearray;
--(id)initAsCopyOf:(CSMultiHandle *)other;
--(void)dealloc;
+- (id)initWithHandles:(NSArray *)handlearray;
+- (id)initAsCopyOf:(CSMultiHandle *)other;
+- (void)dealloc;
 
 // Public methods
--(NSArray *)handles;
--(CSHandle *)currentHandle;
+- (NSArray *) handles;
+- (CSHandle *)currentHandle;
 
 // Implemented by this class
--(off_t)fileSize;
--(off_t)offsetInFile;
--(BOOL)atEndOfFile;
+- (off_t)fileSize;
+- (off_t)offsetInFile;
+- (BOOL) atEndOfFile;
 
--(void)seekToFileOffset:(off_t)offs;
--(void)seekToEndOfFile;
--(int)readAtMost:(int)num toBuffer:(void *)buffer;
+- (void)seekToFileOffset:(off_t)offs;
+- (void)seekToEndOfFile;
+- (int)readAtMost:(int)num toBuffer:(void *)buffer;
 
 // Internal methods
--(void)_raiseSizeUnknownForSegment:(int)i;
+- (void)_raiseSizeUnknownForSegment:(int)i;
 
 @end

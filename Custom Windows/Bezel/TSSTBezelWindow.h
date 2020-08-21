@@ -9,12 +9,14 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface TSSTBezelWindow : NSPanel { }
+@interface TSSTBezelWindow : NSPanel {
+}
 
 @end
 
 
-@interface TSSTBezelView : NSView { }
+@interface TSSTBezelView : NSView {
+}
 
 @end
 

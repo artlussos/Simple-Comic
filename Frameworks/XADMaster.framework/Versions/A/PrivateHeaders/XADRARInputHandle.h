@@ -1,23 +1,22 @@
 #import "CSStreamHandle.h"
 #import "XADRARParser.h"
 
-@interface XADRARInputHandle:CSStreamHandle
-{
-	XADRARParser *parser;
-	NSArray *parts;
+@interface XADRARInputHandle : CSStreamHandle {
+    XADRARParser *parser;
+    NSArray *parts;
 
-	int part;
-	off_t partend;
+    int part;
+    off_t partend;
 
-	uint32_t crc,correctcrc;
+    uint32_t crc, correctcrc;
 }
 
--(id)initWithRARParser:(XADRARParser *)parent parts:(NSArray *)partarray;
--(void)dealloc;
+- (id)initWithRARParser:(XADRARParser *)parent parts:(NSArray *)partarray;
+- (void)dealloc;
 
--(void)resetStream;
--(int)streamAtMost:(int)num toBuffer:(void *)buffer;
+- (void)resetStream;
+- (int) streamAtMost:(int)num toBuffer:(void *)buffer;
 
--(void)startNextPart;
+- (void)startNextPart;
 
 @end

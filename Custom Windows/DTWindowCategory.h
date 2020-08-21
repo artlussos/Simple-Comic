@@ -13,6 +13,6 @@
 
 
 - (float)toolbarHeight;
-- (BOOL)isFullscreen;
+- (BOOL) isFullscreen;
 
 @end

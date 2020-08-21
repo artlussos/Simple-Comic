@@ -42,7 +42,7 @@ typedef unsigned __int8 uint8_t;
 typedef __int64 int64_t;
 typedef __int32 int32_t;
 typedef __int16 int16_t;
-typedef __int8  int8_t;
+typedef __int8 int8_t;
 typedef float float32_t;
 #else
 #include <inttypes.h>
@@ -63,9 +63,9 @@ typedef int32_t f32;
 #define get_exponent(f)     (((f) >> 23) & 0xff)
 #define get_sign(f)         (((f) >> 31) & 0x1)
 
-#define set_mantissa(f,v)   (f) ^= (((f) ^ (v)) & 0x7fffff)
-#define set_exponent(f,v)   (f) ^= (((f) ^ ((v) << 23)) & 0x7f800000)
-#define set_sign(f,v)       (f) ^= (((f) ^ ((v) << 31)) & 0x80000000)
+#define set_mantissa(f, v)   (f) ^= (((f) ^ (v)) & 0x7fffff)
+#define set_exponent(f, v)   (f) ^= (((f) ^ ((v) << 23)) & 0x7f800000)
+#define set_sign(f, v)       (f) ^= (((f) ^ ((v) << 31)) & 0x80000000)
 
 #include <stdio.h>
 
@@ -75,14 +75,14 @@ typedef int32_t f32;
 // ID3v1 and APEv2 TAG formats (may occur at the end of WavPack files)
 
 typedef struct {
-    char tag_id [3], title [30], artist [30], album [30];
-    char year [4], comment [30], genre;
+    char tag_id[3], title[30], artist[30], album[30];
+    char year[4], comment[30], genre;
 } ID3_Tag;
 
 typedef struct {
-    char ID [8];
+    char ID[8];
     int32_t version, length, item_count, flags;
-    char res [8];
+    char res[8];
 } APE_Tag_Hdr;
 
 #define APE_Tag_Hdr_Format "8LLLL"
@@ -104,13 +104,13 @@ typedef struct {
 // and pre-4.0 WavPack files that are not in the "raw" mode)
 
 typedef struct {
-    char ckID [4];
+    char ckID[4];
     uint32_t ckSize;
-    char formType [4];
+    char formType[4];
 } RiffChunkHeader;
 
 typedef struct {
-    char ckID [4];
+    char ckID[4];
     uint32_t ckSize;
 } ChunkHeader;
 
@@ -123,7 +123,7 @@ typedef struct {
     unsigned short cbSize, ValidBitsPerSample;
     int32_t ChannelMask;
     unsigned short SubFormat;
-    char GUID [14];
+    char GUID[14];
 } WaveHeader;
 
 #define WaveHeaderFormat "SSLLSSSSLS"
@@ -135,7 +135,7 @@ typedef struct {
 // and .wvc files.
 
 typedef struct {
-    char ckID [4];
+    char ckID[4];
     uint32_t ckSize;
     short version;
     unsigned char track_no, index_no;
@@ -233,9 +233,9 @@ typedef struct {
     int bits_per_sample, bytes_per_sample;
     int qmode, flags, xmode, num_channels, float_norm_exp;
     int32_t block_samples, extra_flags, sample_rate, channel_mask;
-    unsigned char md5_checksum [16], md5_read;
+    unsigned char md5_checksum[16], md5_read;
     int num_tag_strings;
-    char **tag_strings;
+    char * *tag_strings;
 } WavpackConfig;
 
 #define CONFIG_BYTES_STORED     3       // 1-4 bytes/sample
@@ -275,14 +275,14 @@ typedef struct {
  * very important because once the file has been encoded, the config bits are
  * just for information purposes (i.e., they do not affect decoding),
  *
-#define CONFIG_ADOBE_MODE       0x100   // "adobe" mode for 32-bit floats
-#define CONFIG_VERY_FAST_FLAG   0x400   // double fast
-#define CONFIG_COPY_TIME        0x20000 // copy file-time from source
-#define CONFIG_QUALITY_MODE     0x200000 // psychoacoustic quality mode
-#define CONFIG_RAW_FLAG         0x400000 // raw mode (not implemented yet)
-#define CONFIG_QUIET_MODE       0x10000000 // don't report progress %
-#define CONFIG_IGNORE_LENGTH    0x20000000 // ignore length in wav header
-#define CONFIG_NEW_RIFF_HEADER  0x40000000 // generate new RIFF wav header
+ #define CONFIG_ADOBE_MODE       0x100   // "adobe" mode for 32-bit floats
+ #define CONFIG_VERY_FAST_FLAG   0x400   // double fast
+ #define CONFIG_COPY_TIME        0x20000 // copy file-time from source
+ #define CONFIG_QUALITY_MODE     0x200000 // psychoacoustic quality mode
+ #define CONFIG_RAW_FLAG         0x400000 // raw mode (not implemented yet)
+ #define CONFIG_QUIET_MODE       0x10000000 // don't report progress %
+ #define CONFIG_IGNORE_LENGTH    0x20000000 // ignore length in wav header
+ #define CONFIG_NEW_RIFF_HEADER  0x40000000 // generate new RIFF wav header
  *
  */
 
@@ -324,24 +324,24 @@ typedef struct bs {
 
 struct decorr_pass {
     int term, delta, weight_A, weight_B;
-    int32_t samples_A [MAX_TERM], samples_B [MAX_TERM];
+    int32_t samples_A[MAX_TERM], samples_B[MAX_TERM];
     int32_t aweight_A, aweight_B;
     int32_t sum_A, sum_B;
 };
 
 typedef struct {
-    char joint_stereo, delta, terms [MAX_NTERMS+1];
+    char joint_stereo, delta, terms[MAX_NTERMS+1];
 } WavpackDecorrSpec;
 
 struct entropy_data {
-    uint32_t median [3], slow_level, error_limit;
+    uint32_t median[3], slow_level, error_limit;
 };
 
 struct words_data {
-    uint32_t bitrate_delta [2], bitrate_acc [2];
+    uint32_t bitrate_delta[2], bitrate_acc[2];
     uint32_t pend_data, holding_one, zeros_acc;
     int holding_zero, pend_count;
-    struct entropy_data c [2];
+    struct entropy_data c[2];
 };
 
 typedef struct {
@@ -363,13 +363,13 @@ typedef struct {
     unsigned char float_flags, float_shift, float_max_exp, float_norm_exp;
 
     struct {
-        int32_t shaping_acc [2], shaping_delta [2], error [2];
+        int32_t shaping_acc[2], shaping_delta[2], error[2];
         double noise_sum, noise_ave, noise_max;
         short *shaping_data, *shaping_array;
         int32_t shaping_samples;
     } dc;
 
-    struct decorr_pass decorr_passes [MAX_NTERMS], analysis_pass;
+    struct decorr_pass decorr_passes[MAX_NTERMS], analysis_pass;
     const WavpackDecorrSpec *decorr_specs;
 } WavpackStream;
 
@@ -426,15 +426,15 @@ typedef struct {
     M_Tag m_tag;
 
     int current_stream, num_streams, max_streams, stream_version;
-    WavpackStream **streams;
+    WavpackStream * *streams;
     void *stream3;
 
-    char error_message [80];
+    char error_message[80];
 } WavpackContext;
 
 //////////////////////// function prototypes and macros //////////////////////
 
-#define CLEAR(destin) memset (&destin, 0, sizeof (destin));
+#define CLEAR(destin) memset(&destin, 0, sizeof(destin));
 
 // These macros implement the weight application and update operations
 // that are at the heart of the decorrelation loops. Note that there are
@@ -450,44 +450,44 @@ typedef struct {
 
 #if 1   // PERFCOND - apply decorrelation weight when 32-bit overflow is possible
 #define apply_weight_f(weight, sample) (((((sample & 0xffff) * weight) >> 9) + \
-    (((sample & ~0xffff) >> 9) * weight) + 1) >> 1)
+                                         (((sample & ~0xffff) >> 9) * weight) + 1) >> 1)
 #else
-#define apply_weight_f(weight, sample) ((int32_t)floor(((double) weight * sample + 512.0) / 1024.0))
+#define apply_weight_f(weight, sample) ((int32_t)floor(((double)weight * sample + 512.0) / 1024.0))
 #endif
 
 #if 1   // PERFCOND - universal version that checks input magnitude (or simply uses 64-bit ints)
-#define apply_weight(weight, sample) (sample != (short) sample ? \
-    apply_weight_f (weight, sample) : apply_weight_i (weight, sample))
+#define apply_weight(weight, sample) (sample != (short)sample ? \
+                                      apply_weight_f(weight, sample) : apply_weight_i(weight, sample))
 #else
-#define apply_weight(weight, sample) ((int32_t)((weight * (int64_t) sample + 512) >> 10))
+#define apply_weight(weight, sample) ((int32_t)((weight * (int64_t)sample + 512) >> 10))
 #endif
 
 #if 1   // PERFCOND
 #define update_weight(weight, delta, source, result) \
-    if (source && result) { int32_t s = (int32_t) (source ^ result) >> 31; weight = (delta ^ s) + (weight - s); }
+    if (source && result) { int32_t s = (int32_t)(source ^ result) >> 31; weight = (delta ^ s) + (weight - s); }
 #elif 1
 #define update_weight(weight, delta, source, result) \
-    if (source && result) weight += (((source ^ result) >> 30) | 1) * delta;
+    if (source && result) weight += (((source ^ result) >> 30) | 1) *delta;
 #else
 #define update_weight(weight, delta, source, result) \
     if (source && result) (source ^ result) < 0 ? (weight -= delta) : (weight += delta);
 #endif
 
 #define update_weight_d2(weight, delta, source, result) \
-    if (source && result) weight -= (((source ^ result) >> 29) & 4) - 2;
+    if (source && result) weight -= (((source ^ result) >> 29) & 4) -2;
 
 #define update_weight_clip(weight, delta, source, result) \
     if (source && result) { \
         const int32_t s = (source ^ result) >> 31; \
         if ((weight = (weight ^ s) + (delta - s)) > 1024) weight = 1024; \
-        weight = (weight ^ s) - s; \
+        weight = (weight ^ s) -s; \
     }
 
 #define update_weight_clip_d2(weight, delta, source, result) \
     if (source && result) { \
         const int32_t s = (source ^ result) >> 31; \
         if ((weight = (weight ^ s) + (2 - s)) > 1024) weight = 1024; \
-        weight = (weight ^ s) - s; \
+        weight = (weight ^ s) -s; \
     }
 
 // bits.c
@@ -499,71 +499,71 @@ uint32_t bs_close_write (Bitstream *bs);
 
 int DoReadFile (FILE *hFile, void *lpBuffer, uint32_t nNumberOfBytesToRead, uint32_t *lpNumberOfBytesRead);
 int DoWriteFile (FILE *hFile, void *lpBuffer, uint32_t nNumberOfBytesToWrite, uint32_t *lpNumberOfBytesWritten);
-uint32_t DoGetFileSize (FILE *hFile), DoGetFilePosition (FILE *hFile);
+uint32_t DoGetFileSize (FILE *hFile), DoGetFilePosition(FILE *hFile);
 int DoSetFilePositionRelative (FILE *hFile, int32_t pos, int mode);
 int DoSetFilePositionAbsolute (FILE *hFile, uint32_t pos);
-int DoUngetc (int c, FILE *hFile), DoDeleteFile (char *filename);
-int DoCloseHandle (FILE *hFile), DoTruncateFile (FILE *hFile);
+int DoUngetc (int c, FILE *hFile), DoDeleteFile(char *filename);
+int DoCloseHandle (FILE *hFile), DoTruncateFile(FILE *hFile);
 
 #define bs_is_open(bs) ((bs)->ptr != NULL)
 
 #define getbit(bs) ( \
-    (((bs)->bc) ? \
-        ((bs)->bc--, (bs)->sr & 1) : \
-            (((++((bs)->ptr) != (bs)->end) ? (void) 0 : (bs)->wrap (bs)), (bs)->bc = sizeof (*((bs)->ptr)) * 8 - 1, ((bs)->sr = *((bs)->ptr)) & 1) \
-    ) ? \
+        (((bs)->bc) ? \
+         ((bs)->bc--, (bs)->sr & 1) : \
+         (((++((bs)->ptr) != (bs)->end) ? (void)0 : (bs)->wrap(bs)), (bs)->bc = sizeof(*((bs)->ptr)) * 8 - 1, ((bs)->sr = *((bs)->ptr)) & 1) \
+        ) ? \
         ((bs)->sr >>= 1, 1) : \
         ((bs)->sr >>= 1, 0) \
-)
+        )
 
 #define getbits(value, nbits, bs) { \
-    while ((nbits) > (bs)->bc) { \
-        if (++((bs)->ptr) == (bs)->end) (bs)->wrap (bs); \
-        (bs)->sr |= (int32_t)*((bs)->ptr) << (bs)->bc; \
-        (bs)->bc += sizeof (*((bs)->ptr)) * 8; \
-    } \
-    *(value) = (bs)->sr; \
-    if ((bs)->bc > 32) { \
-        (bs)->bc -= (nbits); \
-        (bs)->sr = *((bs)->ptr) >> (sizeof (*((bs)->ptr)) * 8 - (bs)->bc); \
-    } \
-    else { \
-        (bs)->bc -= (nbits); \
-        (bs)->sr >>= (nbits); \
-    } \
+        while ((nbits) > (bs)->bc) { \
+            if (++((bs)->ptr) == (bs)->end) (bs)->wrap(bs); \
+            (bs)->sr |= (int32_t)*((bs)->ptr) << (bs)->bc; \
+            (bs)->bc += sizeof(*((bs)->ptr)) * 8; \
+        } \
+        *(value) = (bs)->sr; \
+        if ((bs)->bc > 32) { \
+            (bs)->bc -= (nbits); \
+            (bs)->sr = *((bs)->ptr) >> (sizeof(*((bs)->ptr)) * 8 - (bs)->bc); \
+        } \
+        else { \
+            (bs)->bc -= (nbits); \
+            (bs)->sr >>= (nbits); \
+        } \
 }
 
 #define putbit(bit, bs) { if (bit) (bs)->sr |= (1 << (bs)->bc); \
-    if (++((bs)->bc) == sizeof (*((bs)->ptr)) * 8) { \
-        *((bs)->ptr) = (bs)->sr; \
-        (bs)->sr = (bs)->bc = 0; \
-        if (++((bs)->ptr) == (bs)->end) (bs)->wrap (bs); \
-    }}
+                          if (++((bs)->bc) == sizeof(*((bs)->ptr)) * 8) { \
+                              *((bs)->ptr) = (bs)->sr; \
+                              (bs)->sr = (bs)->bc = 0; \
+                              if (++((bs)->ptr) == (bs)->end) (bs)->wrap(bs); \
+                          }}
 
 #define putbit_0(bs) { \
-    if (++((bs)->bc) == sizeof (*((bs)->ptr)) * 8) { \
-        *((bs)->ptr) = (bs)->sr; \
-        (bs)->sr = (bs)->bc = 0; \
-        if (++((bs)->ptr) == (bs)->end) (bs)->wrap (bs); \
-    }}
+        if (++((bs)->bc) == sizeof(*((bs)->ptr)) * 8) { \
+            *((bs)->ptr) = (bs)->sr; \
+            (bs)->sr = (bs)->bc = 0; \
+            if (++((bs)->ptr) == (bs)->end) (bs)->wrap(bs); \
+        }}
 
 #define putbit_1(bs) { (bs)->sr |= (1 << (bs)->bc); \
-    if (++((bs)->bc) == sizeof (*((bs)->ptr)) * 8) { \
-        *((bs)->ptr) = (bs)->sr; \
-        (bs)->sr = (bs)->bc = 0; \
-        if (++((bs)->ptr) == (bs)->end) (bs)->wrap (bs); \
-    }}
+                       if (++((bs)->bc) == sizeof(*((bs)->ptr)) * 8) { \
+                           *((bs)->ptr) = (bs)->sr; \
+                           (bs)->sr = (bs)->bc = 0; \
+                           if (++((bs)->ptr) == (bs)->end) (bs)->wrap(bs); \
+                       }}
 
 #define putbits(value, nbits, bs) { \
-    (bs)->sr |= (int32_t)(value) << (bs)->bc; \
-    if (((bs)->bc += (nbits)) >= sizeof (*((bs)->ptr)) * 8) \
+        (bs)->sr |= (int32_t)(value) << (bs)->bc; \
+        if (((bs)->bc += (nbits)) >= sizeof(*((bs)->ptr)) * 8) \
         do { \
             *((bs)->ptr) = (bs)->sr; \
-            (bs)->sr >>= sizeof (*((bs)->ptr)) * 8; \
-            if (((bs)->bc -= sizeof (*((bs)->ptr)) * 8) > 32 - sizeof (*((bs)->ptr)) * 8) \
-                (bs)->sr |= ((value) >> ((nbits) - (bs)->bc)); \
-            if (++((bs)->ptr) == (bs)->end) (bs)->wrap (bs); \
-        } while ((bs)->bc >= sizeof (*((bs)->ptr)) * 8); \
+            (bs)->sr >>= sizeof(*((bs)->ptr)) * 8; \
+            if (((bs)->bc -= sizeof(*((bs)->ptr)) * 8) > 32 - sizeof(*((bs)->ptr)) * 8) \
+            (bs)->sr |= ((value) >> ((nbits) - (bs)->bc)); \
+            if (++((bs)->ptr) == (bs)->end) (bs)->wrap(bs); \
+        } while ((bs)->bc >= sizeof(*((bs)->ptr)) * 8); \
 }
 
 void little_endian_to_native (void *data, char *format);
@@ -605,7 +605,7 @@ int get_version3 (WavpackContext *wpc);
 
 // metadata.c stuff
 
-int read_metadata_buff (WavpackMetadata *wpmd, unsigned char *blockbuff, unsigned char **buffptr);
+int read_metadata_buff (WavpackMetadata *wpmd, unsigned char *blockbuff, unsigned char * *buffptr);
 int write_metadata_block (WavpackContext *wpc);
 int copy_metadata (WavpackMetadata *wpmd, unsigned char *buffer_start, unsigned char *buffer_end);
 int add_to_metadata (WavpackContext *wpc, void *data, uint32_t bcount, unsigned char id);
@@ -700,7 +700,7 @@ int WavpackGetNumChannels (WavpackContext *wpc);
 int WavpackGetChannelMask (WavpackContext *wpc);
 int WavpackGetReducedChannels (WavpackContext *wpc);
 int WavpackGetFloatNormExp (WavpackContext *wpc);
-int WavpackGetMD5Sum (WavpackContext *wpc, unsigned char data [16]);
+int WavpackGetMD5Sum (WavpackContext *wpc, unsigned char data[16]);
 uint32_t WavpackGetWrapperBytes (WavpackContext *wpc);
 unsigned char *WavpackGetWrapperData (WavpackContext *wpc);
 void WavpackFreeWrapper (WavpackContext *wpc);
@@ -714,7 +714,7 @@ double WavpackGetInstantBitrate (WavpackContext *wpc);
 WavpackContext *WavpackOpenFileOutput (WavpackBlockOutput blockout, void *wv_id, void *wvc_id);
 int WavpackSetConfiguration (WavpackContext *wpc, WavpackConfig *config, uint32_t total_samples);
 int WavpackAddWrapper (WavpackContext *wpc, void *data, uint32_t bcount);
-int WavpackStoreMD5Sum (WavpackContext *wpc, unsigned char data [16]);
+int WavpackStoreMD5Sum (WavpackContext *wpc, unsigned char data[16]);
 int WavpackPackInit (WavpackContext *wpc);
 int WavpackPackSamples (WavpackContext *wpc, int32_t *sample_buffer, uint32_t sample_count);
 int WavpackFlushSamples (WavpackContext *wpc);
@@ -751,43 +751,43 @@ int valid_tag (M_Tag *m_tag);
 //directly map to gcc's native builtins for faster code
 
 #if __GNUC__ < 4
-typedef int __di __attribute__ ((__mode__ (__DI__)));
-typedef int __m64 __attribute__ ((__mode__ (__V2SI__)));
-typedef int __v4hi __attribute__ ((__mode__ (__V4HI__)));
-#define _m_paddsw(m1, m2) (__m64) __builtin_ia32_paddsw ((__v4hi) m1, (__v4hi) m2)
-#define _m_pand(m1, m2) (__m64) __builtin_ia32_pand ((__di) m1, (__di) m2)
-#define _m_pandn(m1, m2) (__m64) __builtin_ia32_pandn ((__di) m1, (__di) m2)
-#define _m_pmaddwd(m1, m2) __builtin_ia32_pmaddwd ((__v4hi) m1, (__v4hi) m2)
-#define _m_por(m1, m2) (__m64) __builtin_ia32_por ((__di) m1, (__di) m2)
-#define _m_pxor(m1, m2) (__m64) __builtin_ia32_pxor ((__di) m1, (__di) m2)
+typedef int __di __attribute__ ((__mode__(__DI__)));
+typedef int __m64 __attribute__ ((__mode__(__V2SI__)));
+typedef int __v4hi __attribute__ ((__mode__(__V4HI__)));
+#define _m_paddsw(m1, m2) (__m64)__builtin_ia32_paddsw((__v4hi)m1, (__v4hi)m2)
+#define _m_pand(m1, m2) (__m64)__builtin_ia32_pand((__di)m1, (__di)m2)
+#define _m_pandn(m1, m2) (__m64)__builtin_ia32_pandn((__di)m1, (__di)m2)
+#define _m_pmaddwd(m1, m2) __builtin_ia32_pmaddwd((__v4hi)m1, (__v4hi)m2)
+#define _m_por(m1, m2) (__m64)__builtin_ia32_por((__di)m1, (__di)m2)
+#define _m_pxor(m1, m2) (__m64)__builtin_ia32_pxor((__di)m1, (__di)m2)
 #else
-typedef int __m64 __attribute__ ((__vector_size__ (8)));
-typedef short __m64_16 __attribute__ ((__vector_size__ (8)));
-#define _m_paddsw(m1, m2) (__m64) __builtin_ia32_paddsw ((__m64_16) m1, (__m64_16) m2)
-#define _m_pand(m1, m2) __builtin_ia32_pand (m1, m2)
-#define _m_pandn(m1, m2) __builtin_ia32_pandn (m1, m2)
-#define _m_pmaddwd(m1, m2) __builtin_ia32_pmaddwd ((__m64_16) m1, (__m64_16) m2)
-#define _m_por(m1, m2) __builtin_ia32_por (m1, m2)
-#define _m_pxor(m1, m2) __builtin_ia32_pxor (m1, m2)
+typedef int __m64 __attribute__ ((__vector_size__(8)));
+typedef short __m64_16 __attribute__ ((__vector_size__(8)));
+#define _m_paddsw(m1, m2) (__m64)__builtin_ia32_paddsw((__m64_16)m1, (__m64_16)m2)
+#define _m_pand(m1, m2) __builtin_ia32_pand(m1, m2)
+#define _m_pandn(m1, m2) __builtin_ia32_pandn(m1, m2)
+#define _m_pmaddwd(m1, m2) __builtin_ia32_pmaddwd((__m64_16)m1, (__m64_16)m2)
+#define _m_por(m1, m2) __builtin_ia32_por(m1, m2)
+#define _m_pxor(m1, m2) __builtin_ia32_pxor(m1, m2)
 #endif
 
-#define _m_paddd(m1, m2) __builtin_ia32_paddd (m1, m2)
-#define _m_pcmpeqd(m1, m2) __builtin_ia32_pcmpeqd (m1, m2)
+#define _m_paddd(m1, m2) __builtin_ia32_paddd(m1, m2)
+#define _m_pcmpeqd(m1, m2) __builtin_ia32_pcmpeqd(m1, m2)
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 4) || __GNUC__ > 4
-#	define _m_pslldi(m1, m2) __builtin_ia32_pslldi ((__m64)m1, m2)
-#	define _m_psradi(m1, m2) __builtin_ia32_psradi ((__m64)m1, m2)
-#	define _m_psrldi(m1, m2) __builtin_ia32_psrldi ((__m64)m1, m2)
+#       define _m_pslldi(m1, m2) __builtin_ia32_pslldi((__m64)m1, m2)
+#       define _m_psradi(m1, m2) __builtin_ia32_psradi((__m64)m1, m2)
+#       define _m_psrldi(m1, m2) __builtin_ia32_psrldi((__m64)m1, m2)
 #else
-#	define _m_pslldi(m1, m2) __builtin_ia32_pslld (m1, m2)
-#	define _m_psradi(m1, m2) __builtin_ia32_psrad (m1, m2)
-#	define _m_psrldi(m1, m2) __builtin_ia32_psrld (m1, m2)
+#       define _m_pslldi(m1, m2) __builtin_ia32_pslld(m1, m2)
+#       define _m_psradi(m1, m2) __builtin_ia32_psrad(m1, m2)
+#       define _m_psrldi(m1, m2) __builtin_ia32_psrld(m1, m2)
 #endif
 
-#define _m_psubd(m1, m2) __builtin_ia32_psubd (m1, m2)
-#define _m_punpckhdq(m1, m2) __builtin_ia32_punpckhdq (m1, m2)
-#define _m_punpckldq(m1, m2) __builtin_ia32_punpckldq (m1, m2)
-#define _mm_empty() __builtin_ia32_emms ()
+#define _m_psubd(m1, m2) __builtin_ia32_psubd(m1, m2)
+#define _m_punpckhdq(m1, m2) __builtin_ia32_punpckhdq(m1, m2)
+#define _m_punpckldq(m1, m2) __builtin_ia32_punpckldq(m1, m2)
+#define _mm_empty() __builtin_ia32_emms()
 #define _mm_set_pi32(m1, m2) { m2, m1 }
 #define _mm_set1_pi32(m) { m, m }
 

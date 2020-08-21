@@ -6,31 +6,29 @@
 //  Copyright 2008 Dancing Tortoise Software. All rights reserved.
 //
 
-#import "TSSTManagedSession.h"
 #import "TSSTManagedGroup.h"
+#import "TSSTManagedSession.h"
 
 @implementation TSSTManagedSession
 
 
-/*	The whole point of this method is to check for files in a session.
-	Making sure they are still there.  If not they are deleted. */
+/*    The whole point of this method is to check for files in a session.
+        Making sure they are still there.  If not they are deleted. */
 - (void)awakeFromFetch
 {
-	[super awakeFromFetch];
-	TSSTManagedGroup * group;
-	NSString * path;
+    [super awakeFromFetch];
+    TSSTManagedGroup *group;
+    NSString *path;
     /* By calling path for all children, groups with unresolved bookmarks
-     are deleted. */
-	for (group in [self valueForKey: @"groups"])
-	{
-		path = [group path];
-	}
+       are deleted. */
+    for (group in [self valueForKey: @"groups"]) {
+        path = [group path];
+    }
 }
-
 
 //- (void)savePageOrder
 //{
-//	NSSet * groups = [self valueForKey: @"groups"];
+//    NSSet * groups = [self valueForKey: @"groups"];
 //}
 
 

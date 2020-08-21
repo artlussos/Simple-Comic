@@ -7,10 +7,10 @@ extern "C" {
 
 void *AllocUniversalDetector();
 void FreeUniversalDetector(void *detectorptr);
-void UniversalDetectorHandleData(void *detectorptr,const char *data,int length);
+void UniversalDetectorHandleData(void *detectorptr, const char *data, int length);
 void UniversalDetectorReset(void *detectorptr);
 int UniversalDetectorDone(void *detectorptr);
-const char *UniversalDetectorCharset(void *detectorptr,float *confidence);
+const char *UniversalDetectorCharset(void *detectorptr, float *confidence);
 
 
 #ifdef __cplusplus

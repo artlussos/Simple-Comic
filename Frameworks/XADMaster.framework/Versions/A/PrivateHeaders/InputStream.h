@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef size_t WinZipJPEGReadFunction(void *context,uint8_t *buffer,size_t length);
+typedef size_t WinZipJPEGReadFunction(void *context, uint8_t *buffer, size_t length);
 
 #endif
 

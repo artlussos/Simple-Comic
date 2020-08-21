@@ -34,23 +34,22 @@ typedef int XADError;
 
 extern NSString *XADExceptionName;
 
-@interface XADException:NSObject
-{
+@interface XADException : NSObject {
 }
 
-+(void)raiseUnknownException;
-+(void)raiseInputException;
-+(void)raiseOutputException;
-+(void)raiseIllegalDataException;
-+(void)raiseNotSupportedException;
-+(void)raiseDecrunchException;
-+(void)raisePasswordException;
-+(void)raiseChecksumException;
-+(void)raiseDataFormatException;
-+(void)raiseOutOfMemoryException;
-+(void)raiseExceptionWithXADError:(XADError)errnum;
++ (void)raiseUnknownException;
++ (void)raiseInputException;
++ (void)raiseOutputException;
++ (void)raiseIllegalDataException;
++ (void)raiseNotSupportedException;
++ (void)raiseDecrunchException;
++ (void)raisePasswordException;
++ (void)raiseChecksumException;
++ (void)raiseDataFormatException;
++ (void)raiseOutOfMemoryException;
++ (void)raiseExceptionWithXADError:(XADError)errnum;
 
-+(XADError)parseException:(id)exception;
-+(NSString *)describeXADError:(XADError)errnum;
++ (XADError)parseException:(id)exception;
++ (NSString *)describeXADError:(XADError)errnum;
 
 @end

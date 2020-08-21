@@ -1,10 +1,10 @@
 #ifndef __RARVIRTUALMACHINE_H__
 #define __RARVIRTUALMACHINE_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
 #include <limits.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
 
 #define RARProgramMemorySize 0x40000
 #define RARProgramMemoryMask (RARProgramMemorySize-1)
@@ -14,38 +14,36 @@
 #define RARProgramSystemGlobalSize 64
 #define RARProgramUserGlobalSize (RARProgramGlobalSize-RARProgramSystemGlobalSize)
 
-typedef struct RARVirtualMachine
-{
-	uint32_t registers[8];
-	uint32_t flags;
-	// TODO: align?
-	uint8_t memory[RARProgramMemorySize+3]; // Let memory accesses at the end overflow.
-	                                        // Possibly not 100% correct but unlikely to be a problem.
+typedef struct RARVirtualMachine {
+    uint32_t registers[8];
+    uint32_t flags;
+    // TODO: align?
+    uint8_t memory[RARProgramMemorySize+3];     // Let memory accesses at the end overflow.
+                                                // Possibly not 100% correct but unlikely to be a problem.
 } RARVirtualMachine;
 
-typedef uint32_t (*RARGetterFunction)(RARVirtualMachine *self,uint32_t value);
-typedef void (*RARSetterFunction)(RARVirtualMachine *self,uint32_t value,uint32_t data);
+typedef uint32_t (*RARGetterFunction)(RARVirtualMachine *self, uint32_t value);
+typedef void (*RARSetterFunction)(RARVirtualMachine *self, uint32_t value, uint32_t data);
 
-typedef struct RAROpcode
-{
-	void *instructionlabel;
+typedef struct RAROpcode {
+    void *instructionlabel;
 
-	RARGetterFunction operand1getter;
-	RARSetterFunction operand1setter;
-	uint32_t value1;
+    RARGetterFunction operand1getter;
+    RARSetterFunction operand1setter;
+    uint32_t value1;
 
-	RARGetterFunction operand2getter;
-	RARSetterFunction operand2setter;
-	uint32_t value2;
+    RARGetterFunction operand2getter;
+    RARSetterFunction operand2setter;
+    uint32_t value2;
 
-	uint8_t instruction;
-	uint8_t bytemode;
-	uint8_t addressingmode1;
-	uint8_t addressingmode2;
+    uint8_t instruction;
+    uint8_t bytemode;
+    uint8_t addressingmode1;
+    uint8_t addressingmode2;
 
-	#if UINTPTR_MAX==UINT64_MAX
-	uint8_t padding[12]; // 64-bit machine, pad to 64 bytes
-	#endif
+        #if UINTPTR_MAX == UINT64_MAX
+    uint8_t padding[12];     // 64-bit machine, pad to 64 bytes
+        #endif
 } RAROpcode;
 
 
@@ -56,15 +54,15 @@ void InitializeRARVirtualMachine(RARVirtualMachine *self);
 
 // Program building
 
-void SetRAROpcodeInstruction(RAROpcode *opcode,unsigned int instruction,bool bytemode);
-void SetRAROpcodeOperand1(RAROpcode *opcode,unsigned int addressingmode,uint32_t value);
-void SetRAROpcodeOperand2(RAROpcode *opcode,unsigned int addressingmode,uint32_t value);
-bool IsProgramTerminated(RAROpcode *opcodes,int numopcodes);
-bool PrepareRAROpcodes(RAROpcode *opcodes,int numopcodes);
+void SetRAROpcodeInstruction(RAROpcode *opcode, unsigned int instruction, bool bytemode);
+void SetRAROpcodeOperand1(RAROpcode *opcode, unsigned int addressingmode, uint32_t value);
+void SetRAROpcodeOperand2(RAROpcode *opcode, unsigned int addressingmode, uint32_t value);
+bool IsProgramTerminated(RAROpcode *opcodes, int numopcodes);
+bool PrepareRAROpcodes(RAROpcode *opcodes, int numopcodes);
 
 // Execution
 
-bool ExecuteRARCode(RARVirtualMachine *self,RAROpcode *opcodes,int numopcodes);
+bool ExecuteRARCode(RARVirtualMachine *self, RAROpcode *opcodes, int numopcodes);
 
 
 // Instruction properties
@@ -87,33 +85,32 @@ char *DescribeRAROperand2(RAROpcode *opcode);
 
 
 
-static inline void SetRARVirtualMachineRegisters(RARVirtualMachine *self,uint32_t registers[8])
-{
-	memcpy(self->registers,registers,sizeof(self->registers));
+static inline void SetRARVirtualMachineRegisters(RARVirtualMachine *self, uint32_t registers[8]){
+    memcpy(self->registers, registers, sizeof(self->registers));
 }
 
-static inline uint32_t _RARRead32(const uint8_t *b) { return ((uint32_t)b[3]<<24)|((uint32_t)b[2]<<16)|((uint32_t)b[1]<<8)|(uint32_t)b[0]; }
-
-static inline void _RARWrite32(uint8_t *b,uint32_t n) { b[3]=(n>>24)&0xff; b[2]=(n>>16)&0xff; b[1]=(n>>8)&0xff; b[0]=n&0xff; }
-
-static inline uint32_t RARVirtualMachineRead32(RARVirtualMachine *self,uint32_t address)
-{
-	return _RARRead32(&self->memory[address&RARProgramMemoryMask]);
+static inline uint32_t _RARRead32(const uint8_t *b) {
+    return ((uint32_t)b[3]<<24)|((uint32_t)b[2]<<16)|((uint32_t)b[1]<<8)|(uint32_t)b[0];
 }
 
-static inline void RARVirtualMachineWrite32(RARVirtualMachine *self,uint32_t address,uint32_t val)
-{
-	_RARWrite32(&self->memory[address&RARProgramMemoryMask],val);
+static inline void _RARWrite32(uint8_t *b, uint32_t n) {
+    b[3] = (n>>24)&0xff; b[2] = (n>>16)&0xff; b[1] = (n>>8)&0xff; b[0] = n&0xff;
 }
 
-static inline uint32_t RARVirtualMachineRead8(RARVirtualMachine *self,uint32_t address)
-{
-	return self->memory[address&RARProgramMemoryMask];
+static inline uint32_t RARVirtualMachineRead32(RARVirtualMachine *self, uint32_t address){
+    return _RARRead32(&self->memory[address&RARProgramMemoryMask]);
 }
 
-static inline void RARVirtualMachineWrite8(RARVirtualMachine *self,uint32_t address,uint32_t val)
-{
-	self->memory[address&RARProgramMemoryMask]=val;
+static inline void RARVirtualMachineWrite32(RARVirtualMachine *self, uint32_t address, uint32_t val){
+    _RARWrite32(&self->memory[address&RARProgramMemoryMask], val);
+}
+
+static inline uint32_t RARVirtualMachineRead8(RARVirtualMachine *self, uint32_t address){
+    return self->memory[address&RARProgramMemoryMask];
+}
+
+static inline void RARVirtualMachineWrite8(RARVirtualMachine *self, uint32_t address, uint32_t val){
+    self->memory[address&RARProgramMemoryMask] = val;
 }
 
 #define RARMovInstruction 0

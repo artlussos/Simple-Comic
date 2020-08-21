@@ -1,39 +1,39 @@
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is mozilla.org code.
- *
- * The Initial Developer of the Original Code is
- * Netscape Communications Corporation.
- * Portions created by the Initial Developer are Copyright (C) 1998
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either of the GNU General Public License Version 2 or later (the "GPL"),
- * or the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+* Version: MPL 1.1/GPL 2.0/LGPL 2.1
+*
+* The contents of this file are subject to the Mozilla Public License Version
+* 1.1 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+* http://www.mozilla.org/MPL/
+*
+* Software distributed under the License is distributed on an "AS IS" basis,
+* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+* for the specific language governing rights and limitations under the
+* License.
+*
+* The Original Code is mozilla.org code.
+*
+* The Initial Developer of the Original Code is
+* Netscape Communications Corporation.
+* Portions created by the Initial Developer are Copyright (C) 1998
+* the Initial Developer. All Rights Reserved.
+*
+* Contributor(s):
+*
+* Alternatively, the contents of this file may be used under the terms of
+* either of the GNU General Public License Version 2 or later (the "GPL"),
+* or the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+* in which case the provisions of the GPL or the LGPL are applicable instead
+* of those above. If you wish to allow use of your version of this file only
+* under the terms of either the GPL or the LGPL, and not to allow others to
+* use your version of this file under the terms of the MPL, indicate your
+* decision by deleting the provisions above and replace them with the notice
+* and other provisions required by the GPL or the LGPL. If you do not delete
+* the provisions above, a recipient may use your version of this file under
+* the terms of any one of the MPL, the GPL or the LGPL.
+*
+* ***** END LICENSE BLOCK ***** */
 
 #ifndef nsError_h__
 #define nsError_h__
@@ -45,7 +45,7 @@
 /*
  * To add error code to your module, you need to do the following:
  *
- * 1) Add a module offset code.  Add yours to the bottom of the list 
+ * 1) Add a module offset code.  Add yours to the bottom of the list
  *    right below this comment, adding 1.
  *
  * 2) In your module, define a header file which uses one of the
@@ -104,7 +104,7 @@
  * returning codes from other modules that might also use
  * the generic base.
  */
-#define NS_ERROR_MODULE_GENERAL    51  
+#define NS_ERROR_MODULE_GENERAL    51
 
 /**
  * @name Standard Error Handling Macros
@@ -131,14 +131,14 @@
  * @name Standard Error Generating Macros
  */
 
-#define NS_ERROR_GENERATE(sev,module,code) \
-    ((nsresult) (((PRUint32)(sev)<<31) | ((PRUint32)(module+NS_ERROR_MODULE_BASE_OFFSET)<<16) | ((PRUint32)(code))) )
+#define NS_ERROR_GENERATE(sev, module, code) \
+    ((nsresult)(((PRUint32)(sev)<<31) | ((PRUint32)(module+NS_ERROR_MODULE_BASE_OFFSET)<<16) | ((PRUint32)(code))) )
 
-#define NS_ERROR_GENERATE_SUCCESS(module,code) \
-    ((nsresult) (((PRUint32)(NS_ERROR_SEVERITY_SUCCESS)<<31) | ((PRUint32)(module+NS_ERROR_MODULE_BASE_OFFSET)<<16) | ((PRUint32)(code))) )
+#define NS_ERROR_GENERATE_SUCCESS(module, code) \
+    ((nsresult)(((PRUint32)(NS_ERROR_SEVERITY_SUCCESS)<<31) | ((PRUint32)(module+NS_ERROR_MODULE_BASE_OFFSET)<<16) | ((PRUint32)(code))) )
 
-#define NS_ERROR_GENERATE_FAILURE(module,code) \
-    ((nsresult) (((PRUint32)(NS_ERROR_SEVERITY_ERROR)<<31) | ((PRUint32)(module+NS_ERROR_MODULE_BASE_OFFSET)<<16) | ((PRUint32)(code))) )
+#define NS_ERROR_GENERATE_FAILURE(module, code) \
+    ((nsresult)(((PRUint32)(NS_ERROR_SEVERITY_ERROR)<<31) | ((PRUint32)(module+NS_ERROR_MODULE_BASE_OFFSET)<<16) | ((PRUint32)(code))) )
 
 /**
  * @name Standard Macros for retrieving error bits
@@ -157,7 +157,7 @@
 /* Standard "it worked" return value */
 #define NS_OK                              0
 
-#define NS_ERROR_BASE                      ((nsresult) 0xC1F30000)
+#define NS_ERROR_BASE                      ((nsresult)0xC1F30000)
 
 /* Returned when an instance is not initialized */
 #define NS_ERROR_NOT_INITIALIZED           (NS_ERROR_BASE + 1)
@@ -166,49 +166,49 @@
 #define NS_ERROR_ALREADY_INITIALIZED       (NS_ERROR_BASE + 2)
 
 /* Returned by a not implemented function */
-#define NS_ERROR_NOT_IMPLEMENTED           ((nsresult) 0x80004001L)
+#define NS_ERROR_NOT_IMPLEMENTED           ((nsresult)0x80004001L)
 
 /* Returned when a given interface is not supported. */
-#define NS_NOINTERFACE                     ((nsresult) 0x80004002L)
+#define NS_NOINTERFACE                     ((nsresult)0x80004002L)
 #define NS_ERROR_NO_INTERFACE              NS_NOINTERFACE
 
-#define NS_ERROR_INVALID_POINTER           ((nsresult) 0x80004003L)
+#define NS_ERROR_INVALID_POINTER           ((nsresult)0x80004003L)
 #define NS_ERROR_NULL_POINTER              NS_ERROR_INVALID_POINTER
 
 /* Returned when a function aborts */
-#define NS_ERROR_ABORT                     ((nsresult) 0x80004004L)
+#define NS_ERROR_ABORT                     ((nsresult)0x80004004L)
 
 /* Returned when a function fails */
-#define NS_ERROR_FAILURE                   ((nsresult) 0x80004005L)
+#define NS_ERROR_FAILURE                   ((nsresult)0x80004005L)
 
 /* Returned when an unexpected error occurs */
-#define NS_ERROR_UNEXPECTED                ((nsresult) 0x8000ffffL)
+#define NS_ERROR_UNEXPECTED                ((nsresult)0x8000ffffL)
 
 /* Returned when a memory allocation fails */
-#define NS_ERROR_OUT_OF_MEMORY             ((nsresult) 0x8007000eL)
+#define NS_ERROR_OUT_OF_MEMORY             ((nsresult)0x8007000eL)
 
 /* Returned when an illegal value is passed */
-#define NS_ERROR_ILLEGAL_VALUE             ((nsresult) 0x80070057L)
+#define NS_ERROR_ILLEGAL_VALUE             ((nsresult)0x80070057L)
 #define NS_ERROR_INVALID_ARG               NS_ERROR_ILLEGAL_VALUE
 
 /* Returned when a class doesn't allow aggregation */
-#define NS_ERROR_NO_AGGREGATION            ((nsresult) 0x80040110L)
+#define NS_ERROR_NO_AGGREGATION            ((nsresult)0x80040110L)
 
 /* Returned when an operation can't complete due to an unavailable resource */
-#define NS_ERROR_NOT_AVAILABLE             ((nsresult) 0x80040111L)
+#define NS_ERROR_NOT_AVAILABLE             ((nsresult)0x80040111L)
 
 /* Returned when a class is not registered */
-#define NS_ERROR_FACTORY_NOT_REGISTERED    ((nsresult) 0x80040154L)
+#define NS_ERROR_FACTORY_NOT_REGISTERED    ((nsresult)0x80040154L)
 
 /* Returned when a class cannot be registered, but may be tried again later */
-#define NS_ERROR_FACTORY_REGISTER_AGAIN    ((nsresult) 0x80040155L)
+#define NS_ERROR_FACTORY_REGISTER_AGAIN    ((nsresult)0x80040155L)
 
 /* Returned when a dynamically loaded factory couldn't be found */
-#define NS_ERROR_FACTORY_NOT_LOADED        ((nsresult) 0x800401f8L)
+#define NS_ERROR_FACTORY_NOT_LOADED        ((nsresult)0x800401f8L)
 
 /* Returned when a factory doesn't support signatures */
 #define NS_ERROR_FACTORY_NO_SIGNATURE_SUPPORT \
-                                           (NS_ERROR_BASE + 0x101)
+    (NS_ERROR_BASE + 0x101)
 
 /* Returned when a factory already is registered */
 #define NS_ERROR_FACTORY_EXISTS            (NS_ERROR_BASE + 0x100)
@@ -218,42 +218,42 @@
    for NS_ERROR_PROXY_INVALID_IN_PARAMETER and NS_ERROR_PROXY_INVALID_OUT_PARAMETER.
    The first matches:
 
-     #define RPC_E_INVALID_PARAMETER          _HRESULT_TYPEDEF_(0x80010010L)
-   
+ #define RPC_E_INVALID_PARAMETER          _HRESULT_TYPEDEF_(0x80010010L)
+
    Errors returning this mean that the xpcom proxy code could not create a proxy for
    one of the in paramaters.
 
    Because of this, we are ignoring the convention if using a base and offset for
    error numbers.
 
-*/
+ */
 
 /* Returned when a proxy could not be create a proxy for one of the IN parameters
-   This is returned only when the "real" meathod has NOT been invoked. 
-*/
+   This is returned only when the "real" meathod has NOT been invoked.
+ */
 
-#define NS_ERROR_PROXY_INVALID_IN_PARAMETER        ((nsresult) 0x80010010L)
+#define NS_ERROR_PROXY_INVALID_IN_PARAMETER        ((nsresult)0x80010010L)
 
 /* Returned when a proxy could not be create a proxy for one of the OUT parameters
-   This is returned only when the "real" meathod has ALREADY been invoked. 
-*/
+   This is returned only when the "real" meathod has ALREADY been invoked.
+ */
 
-#define NS_ERROR_PROXY_INVALID_OUT_PARAMETER        ((nsresult) 0x80010011L)
+#define NS_ERROR_PROXY_INVALID_OUT_PARAMETER        ((nsresult)0x80010011L)
 
 
 /*@}*/
 
- /* I/O Errors */
+/* I/O Errors */
 
- /*  Stream closed */
+/*  Stream closed */
 #define NS_BASE_STREAM_CLOSED         NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_BASE, 2)
- /*  Error from the operating system */
+/*  Error from the operating system */
 #define NS_BASE_STREAM_OSERROR        NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_BASE, 3)
- /*  Illegal arguments */
+/*  Illegal arguments */
 #define NS_BASE_STREAM_ILLEGAL_ARGS   NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_BASE, 4)
- /*  For unichar streams */
+/*  For unichar streams */
 #define NS_BASE_STREAM_NO_CONVERTER   NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_BASE, 5)
- /*  For unichar streams */
+/*  For unichar streams */
 #define NS_BASE_STREAM_BAD_CONVERSION NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_BASE, 6)
 
 #define NS_BASE_STREAM_WOULD_BLOCK    NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_BASE, 7)
@@ -283,27 +283,27 @@
 
 #define NS_SUCCESS_FILE_DIRECTORY_EMPTY         NS_ERROR_GENERATE_SUCCESS(NS_ERROR_MODULE_FILES, 1)
 
- /* Result codes used by nsIDirectoryServiceProvider2 */
+/* Result codes used by nsIDirectoryServiceProvider2 */
 
 #define NS_SUCCESS_AGGREGATE_RESULT             NS_ERROR_GENERATE_SUCCESS(NS_ERROR_MODULE_FILES, 2)
 
- /* Result codes used by nsIVariant */
+/* Result codes used by nsIVariant */
 
-#define NS_ERROR_CANNOT_CONVERT_DATA            NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_XPCOM,  1)
-#define NS_ERROR_OBJECT_IS_IMMUTABLE            NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_XPCOM,  2)
-#define NS_ERROR_LOSS_OF_SIGNIFICANT_DATA       NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_XPCOM,  3)
+#define NS_ERROR_CANNOT_CONVERT_DATA            NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_XPCOM, 1)
+#define NS_ERROR_OBJECT_IS_IMMUTABLE            NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_XPCOM, 2)
+#define NS_ERROR_LOSS_OF_SIGNIFICANT_DATA       NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_XPCOM, 3)
 
-#define NS_SUCCESS_LOSS_OF_INSIGNIFICANT_DATA   NS_ERROR_GENERATE_SUCCESS(NS_ERROR_MODULE_XPCOM,  1)
+#define NS_SUCCESS_LOSS_OF_INSIGNIFICANT_DATA   NS_ERROR_GENERATE_SUCCESS(NS_ERROR_MODULE_XPCOM, 1)
 
 
- /*
-  * This will return the nsresult corresponding to the most recent NSPR failure
-  * returned by PR_GetError.
-  *
-  ***********************************************************************
-  *      Do not depend on this function. It will be going away!
-  ***********************************************************************
-  */
+/*
+ * This will return the nsresult corresponding to the most recent NSPR failure
+ * returned by PR_GetError.
+ *
+ ***********************************************************************
+ *      Do not depend on this function. It will be going away!
+ ***********************************************************************
+ */
 extern NS_COM nsresult
 NS_ErrorAccordingToNSPR();
 

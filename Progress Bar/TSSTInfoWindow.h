@@ -10,10 +10,11 @@
 
 
 /*
- This panel subclass is used by both the loupe and the speach bubble styled
- page preview.
+   This panel subclass is used by both the loupe and the speach bubble styled
+   page preview.
  */
-@interface TSSTInfoWindow : NSPanel { }
+@interface TSSTInfoWindow : NSPanel {
+}
 
 - (void)caretAtPoint:(NSPoint)point size:(NSSize)size withLimitLeft:(float)left right:(float)right;
 - (void)centerAtPoint:(NSPoint)center;
@@ -23,10 +24,9 @@
 
 
 
-@interface TSSTInfoView : NSView
-{
+@interface TSSTInfoView : NSView {
     float caretPosition;
-	BOOL bordered;
+    BOOL bordered;
 }
 
 @property (assign) BOOL bordered;
@@ -36,7 +36,7 @@
 
 
 @interface TSSTCircularImageView : NSImageView {
-    
+
 }
 
 @end

@@ -13,7 +13,7 @@
 
 - (id)init
 {
-    self = [super initWithWindowNibName: @"Preferences"];
+    self = [super initWithWindowNibName:@"Preferences"];
     return self;
 }
 

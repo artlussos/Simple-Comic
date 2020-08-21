@@ -1,30 +1,30 @@
-/*	
-	Copyright (c) 2006-2009 Dancing Tortoise Software
+/*
+        Copyright (c) 2006-2009 Dancing Tortoise Software
 
-	Permission is hereby granted, free of charge, to any person 
-	obtaining a copy of this software and associated documentation
-	files (the "Software"), to deal in the Software without 
-	restriction, including without limitation the rights to use, 
-	copy, modify, merge, publish, distribute, sublicense, and/or 
-	sell copies of the Software, and to permit persons to whom the
-	Software is furnished to do so, subject to the following 
-	conditions:
+        Permission is hereby granted, free of charge, to any person
+        obtaining a copy of this software and associated documentation
+        files (the "Software"), to deal in the Software without
+        restriction, including without limitation the rights to use,
+        copy, modify, merge, publish, distribute, sublicense, and/or
+        sell copies of the Software, and to permit persons to whom the
+        Software is furnished to do so, subject to the following
+        conditions:
 
-	The above copyright notice and this permission notice shall be
-	included in all copies or substantial portions of the Software.
+        The above copyright notice and this permission notice shall be
+        included in all copies or substantial portions of the Software.
 
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
-	OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
-	NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
-	HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
-	OTHER DEALINGS IN THE SOFTWARE.
-	
-	Simple Comic
-	SimpleComicAppDelegate.h
-*/
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+        EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+        OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+        NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+        HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+        WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+        FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+        OTHER DEALINGS IN THE SOFTWARE.
+
+        Simple Comic
+        SimpleComicAppDelegate.h
+ */
 
 
 #import <Cocoa/Cocoa.h>
@@ -38,80 +38,79 @@
 @class TSSTManagedSession;
 @class DTPreferencesController;
 
-extern NSString * TSSTPageOrder;
-extern NSString * TSSTPageZoomRate;
-extern NSString * TSSTFullscreen;
-extern NSString * TSSTSavedSelection;
-extern NSString * TSSTThumbnailSize;
-extern NSString * TSSTTwoPageSpread;
-extern NSString * TSSTPageScaleOptions;
-extern NSString * TSSTIgnoreDonation;
-extern NSString * TSSTScrollPosition;
-extern NSString * TSSTConstrainScale;
-extern NSString * TSSTZoomLevel;
-extern NSString * TSSTViewRotation;
-extern NSString * TSSTBackgroundColor;
-extern NSString * TSSTSessionRestore;
-extern NSString * TSSTScrollersVisible;
-extern NSString * TSSTAutoPageTurn;
-extern NSString * TSSTWindowAutoResize;
-extern NSString * TSSTLoupeDiameter;
-extern NSString * TSSTLoupePower;
-extern NSString * TSSTStatusbarVisible;
-extern NSString * TSSTLonelyFirstPage;
-extern NSString * TSSTNestedArchives;
-extern NSString * TSSTUpdateSelection;
-extern NSString * TSSTSessionEndNotification;
+extern NSString *TSSTPageOrder;
+extern NSString *TSSTPageZoomRate;
+extern NSString *TSSTFullscreen;
+extern NSString *TSSTSavedSelection;
+extern NSString *TSSTThumbnailSize;
+extern NSString *TSSTTwoPageSpread;
+extern NSString *TSSTPageScaleOptions;
+extern NSString *TSSTIgnoreDonation;
+extern NSString *TSSTScrollPosition;
+extern NSString *TSSTConstrainScale;
+extern NSString *TSSTZoomLevel;
+extern NSString *TSSTViewRotation;
+extern NSString *TSSTBackgroundColor;
+extern NSString *TSSTSessionRestore;
+extern NSString *TSSTScrollersVisible;
+extern NSString *TSSTAutoPageTurn;
+extern NSString *TSSTWindowAutoResize;
+extern NSString *TSSTLoupeDiameter;
+extern NSString *TSSTLoupePower;
+extern NSString *TSSTStatusbarVisible;
+extern NSString *TSSTLonelyFirstPage;
+extern NSString *TSSTNestedArchives;
+extern NSString *TSSTUpdateSelection;
+extern NSString *TSSTSessionEndNotification;
 
 
 /*!
     This class is the application delegate.
     It handles the following:
- 
+
     The Core Data store
     File loading
     Session auto-save
     Archive password prompts during their loading
     Fallback archive encoding selection
-*/
-@interface SimpleComicAppDelegate : NSObject
-{
+ */
+@interface SimpleComicAppDelegate : NSObject {
 /*  When opening encrypted zip or rar archives this panel is
     made visible as a modal so the user can enter a password. */
-    IBOutlet NSPanel           * passwordPanel;
-    IBOutlet NSSecureTextField * passwordField;
-    
-/*  This panel appears when the text encoding auto-detection fails */
-    IBOutlet NSPanel           * encodingPanel;
-    IBOutlet NSTextField       * encodingTestField;
-    NSData					   * encodingTestData;
-    NSInteger					 encodingSelection;
-    IBOutlet NSPopUpButton     * encodingPopup;
+    IBOutlet NSPanel *passwordPanel;
+    IBOutlet NSSecureTextField *passwordField;
 
-    IBOutlet NSPanel * donationPanel;
-	
-	IBOutlet NSPanel * launchPanel;
-	
+/*  This panel appears when the text encoding auto-detection fails */
+    IBOutlet NSPanel *encodingPanel;
+    IBOutlet NSTextField *encodingTestField;
+    NSData *encodingTestData;
+    NSInteger encodingSelection;
+    IBOutlet NSPopUpButton *encodingPopup;
+
+    IBOutlet NSPanel *donationPanel;
+
+    IBOutlet NSPanel *launchPanel;
+
 /*  Core Data stuff. */
-    NSManagedObjectModel		 * managedObjectModel;
-    NSManagedObjectContext		 * managedObjectContext;
-	NSPersistentStoreCoordinator * persistentStoreCoordinator;
-	
+    NSManagedObjectModel *managedObjectModel;
+    NSManagedObjectContext *managedObjectContext;
+    NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
 /* Auto-save timer */
-	NSTimer * autoSave;
+    NSTimer *autoSave;
 
 /*  Window controller for preferences. */
-    DTPreferencesController      * preferences;
-    
+    DTPreferencesController *preferences;
+
 /*  This is the array that maintains all of the session window managers. */
-    NSMutableArray * sessions;
-    
-/*	Vars to delay the loading of files from an app launch until the core data store
-	has finished initializing */
-    BOOL      launchInProgress;
-	BOOL	  optionHeldAtlaunch;
-	NSArray	* launchFiles;
-	
+    NSMutableArray *sessions;
+
+/*  Vars to delay the loading of files from an app launch until the core data store
+    has finished initializing */
+    BOOL launchInProgress;
+    BOOL optionHeldAtlaunch;
+    NSArray *launchFiles;
+
 }
 
 
@@ -124,13 +123,13 @@ extern NSString * TSSTSessionEndNotification;
 
 /*  Core Data methods, slightly altered boilerplate. */
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
-- (NSManagedObjectModel *)managedObjectModel;
-- (NSManagedObjectContext *)managedObjectContext;
-- (NSString *)applicationSupportFolder;
-- (BOOL)saveContext;
+- (NSManagedObjectModel *)        managedObjectModel;
+- (NSManagedObjectContext *)      managedObjectContext;
+- (NSString *)                    applicationSupportFolder;
+- (BOOL)                          saveContext;
 
 
-/*  Creates a new Session object based on user prefs and then 
+/*  Creates a new Session object based on user prefs and then
     passes the files array to addFiles:toSesion: */
 - (TSSTManagedSession *)newSessionWithFiles:(NSArray *)files;
 
@@ -139,20 +138,20 @@ extern NSString * TSSTSessionEndNotification;
 - (void)windowForSession:(TSSTManagedSession *)session;
 
 /*  When an end session notification is received this method
-	is called. */
+        is called. */
 - (void)endSession:(NSNotification *)notification;
 
 /*  This method is called at launch, it iterates through all of the saved
     sessions calling windowForSession: for each in turn. */
 - (void)sessionRelaunch;
-    
+
 /*  This method adds any file passed to it to a session.  This includes recursive
-	parsing of archives and folders. */
+        parsing of archives and folders. */
 - (void)addFiles:(NSArray *)paths toSession:(TSSTManagedSession *)session;
 
 /*  Called when Simple Comic encounters a password protected
     archive.  Brings a password dialog forward. */
-- (NSString*)passwordForArchiveWithPath:(NSString*)filename;
+- (NSString *)passwordForArchiveWithPath:(NSString *)filename;
 
 
 - (void)generateEncodingMenu;

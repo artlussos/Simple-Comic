@@ -1,31 +1,31 @@
 /*
----------------------------------------------------------------------------
-Copyright (c) 1998-2010, Brian Gladman, Worcester, UK. All rights reserved.
+   ---------------------------------------------------------------------------
+   Copyright (c) 1998-2010, Brian Gladman, Worcester, UK. All rights reserved.
 
-The redistribution and use of this software (with or without changes)
-is allowed without the payment of fees or royalties provided that:
+   The redistribution and use of this software (with or without changes)
+   is allowed without the payment of fees or royalties provided that:
 
-  source code distributions include the above copyright notice, this
-  list of conditions and the following disclaimer;
+   source code distributions include the above copyright notice, this
+   list of conditions and the following disclaimer;
 
-  binary distributions include the above copyright notice, this list
-  of conditions and the following disclaimer in their documentation.
+   binary distributions include the above copyright notice, this list
+   of conditions and the following disclaimer in their documentation.
 
-This software is provided 'as is' with no explicit or implied warranties
-in respect of its operation, including, but not limited to, correctness
-and fitness for purpose.
----------------------------------------------------------------------------
-Issue Date: 20/12/2007
+   This software is provided 'as is' with no explicit or implied warranties
+   in respect of its operation, including, but not limited to, correctness
+   and fitness for purpose.
+   ---------------------------------------------------------------------------
+   Issue Date: 20/12/2007
 
- This file contains the definitions required to use AES in C. See aesopt.h
- for optimisation details.
-*/
+   This file contains the definitions required to use AES in C. See aesopt.h
+   for optimisation details.
+ */
 
 #ifndef _AES_H
 #define _AES_H
 
-#include <stdlib.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #if defined(__cplusplus)
 extern "C"
@@ -51,9 +51,9 @@ extern "C"
 /* 192 or 256-bit keys respectively. That is 176, 208 or 240 bytes  */
 /* or 44, 52 or 60 32-bit words.                                    */
 
-#if defined( AES_VAR ) || defined( AES_256 )
+#if defined(AES_VAR) || defined(AES_256)
 #define KS_LENGTH       60
-#elif defined( AES_192 )
+#elif defined(AES_192)
 #define KS_LENGTH       52
 #else
 #define KS_LENGTH       44
@@ -66,18 +66,15 @@ extern "C"
 
 typedef union
 {   uint32_t l;
-    uint8_t b[4];
-} aes_inf;
+    uint8_t b[4];} aes_inf;
 
 typedef struct
 {   uint32_t ks[KS_LENGTH];
-    aes_inf inf;
-} aes_encrypt_ctx;
+    aes_inf inf;} aes_encrypt_ctx;
 
 typedef struct
 {   uint32_t ks[KS_LENGTH];
-    aes_inf inf;
-} aes_decrypt_ctx;
+    aes_inf inf;} aes_decrypt_ctx;
 
 /* This routine must be called before first use if non-static       */
 /* tables are being used                                            */
@@ -87,21 +84,21 @@ int aes_init(void);
 /* Key lengths in the range 16 <= key_len <= 32 are given in bytes, */
 /* those in the range 128 <= key_len <= 256 are given in bits       */
 
-#if defined( AES_ENCRYPT )
+#if defined(AES_ENCRYPT)
 
-#if defined( AES_128 ) || defined( AES_VAR)
+#if defined(AES_128) || defined(AES_VAR)
 int aes_encrypt_key128(const unsigned char *key, aes_encrypt_ctx cx[1]);
 #endif
 
-#if defined( AES_192 ) || defined( AES_VAR)
+#if defined(AES_192) || defined(AES_VAR)
 int aes_encrypt_key192(const unsigned char *key, aes_encrypt_ctx cx[1]);
 #endif
 
-#if defined( AES_256 ) || defined( AES_VAR)
+#if defined(AES_256) || defined(AES_VAR)
 int aes_encrypt_key256(const unsigned char *key, aes_encrypt_ctx cx[1]);
 #endif
 
-#if defined( AES_VAR )
+#if defined(AES_VAR)
 int aes_encrypt_key(const unsigned char *key, int key_len, aes_encrypt_ctx cx[1]);
 #endif
 
@@ -109,21 +106,21 @@ int aes_encrypt(const unsigned char *in, unsigned char *out, const aes_encrypt_c
 
 #endif
 
-#if defined( AES_DECRYPT )
+#if defined(AES_DECRYPT)
 
-#if defined( AES_128 ) || defined( AES_VAR)
+#if defined(AES_128) || defined(AES_VAR)
 int aes_decrypt_key128(const unsigned char *key, aes_decrypt_ctx cx[1]);
 #endif
 
-#if defined( AES_192 ) || defined( AES_VAR)
+#if defined(AES_192) || defined(AES_VAR)
 int aes_decrypt_key192(const unsigned char *key, aes_decrypt_ctx cx[1]);
 #endif
 
-#if defined( AES_256 ) || defined( AES_VAR)
+#if defined(AES_256) || defined(AES_VAR)
 int aes_decrypt_key256(const unsigned char *key, aes_decrypt_ctx cx[1]);
 #endif
 
-#if defined( AES_VAR )
+#if defined(AES_VAR)
 int aes_decrypt_key(const unsigned char *key, int key_len, aes_decrypt_ctx cx[1]);
 #endif
 
@@ -131,7 +128,7 @@ int aes_decrypt(const unsigned char *in, unsigned char *out, const aes_decrypt_c
 
 #endif
 
-#if defined( AES_MODES )
+#if defined(AES_MODES)
 
 /* Multiple calls to the following subroutines for multiple block   */
 /* ECB, CBC, CFB, OFB and CTR mode encryption can be used to handle */
@@ -175,7 +172,7 @@ int aes_cfb_decrypt(const unsigned char *ibuf, unsigned char *obuf,
 #define aes_ofb_decrypt aes_ofb_crypt
 
 int aes_ofb_crypt(const unsigned char *ibuf, unsigned char *obuf,
-                    int len, unsigned char *iv, aes_encrypt_ctx cx[1]);
+                  int len, unsigned char *iv, aes_encrypt_ctx cx[1]);
 
 typedef void cbuf_inc(unsigned char *cbuf);
 
@@ -183,7 +180,7 @@ typedef void cbuf_inc(unsigned char *cbuf);
 #define aes_ctr_decrypt aes_ctr_crypt
 
 int aes_ctr_crypt(const unsigned char *ibuf, unsigned char *obuf,
-            int len, unsigned char *cbuf, cbuf_inc ctr_inc, aes_encrypt_ctx cx[1]);
+                  int len, unsigned char *cbuf, cbuf_inc ctr_inc, aes_encrypt_ctx cx[1]);
 
 #endif
 

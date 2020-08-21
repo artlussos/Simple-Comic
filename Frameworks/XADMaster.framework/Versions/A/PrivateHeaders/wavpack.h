@@ -25,7 +25,7 @@ typedef unsigned __int8 uint8_t;
 typedef __int64 int64_t;
 typedef __int32 int32_t;
 typedef __int16 int16_t;
-typedef __int8  int8_t;
+typedef __int8 int8_t;
 typedef float float32_t;
 #else
 #include <inttypes.h>
@@ -37,15 +37,15 @@ typedef float float32_t;
 // concerned with any of these.
 
 typedef struct {
-    char ckID [4];
+    char ckID[4];
     uint32_t ckSize;
-    char formType [4];
+    char formType[4];
 } RiffChunkHeader;
 
 /*typedef struct {
     char ckID [4];
     uint32_t ckSize;
-} ChunkHeader;*/
+   } ChunkHeader;*/
 
 #define ChunkHeaderFormat "4L"
 
@@ -56,7 +56,7 @@ typedef struct {
     unsigned short cbSize, ValidBitsPerSample;
     int32_t ChannelMask;
     unsigned short SubFormat;
-    char GUID [14];
+    char GUID[14];
 } WaveHeader;
 
 #define WaveHeaderFormat "SSLLSSSSLS"
@@ -69,7 +69,7 @@ typedef struct {
 // would be used (with appropriate endian correction).
 
 typedef struct {
-    char ckID [4];
+    char ckID[4];
     uint32_t ckSize;
     short version;
     unsigned char track_no, index_no;
@@ -157,9 +157,9 @@ typedef struct {
     int bits_per_sample, bytes_per_sample;
     int qmode, flags, xmode, num_channels, float_norm_exp;
     int32_t block_samples, extra_flags, sample_rate, channel_mask;
-    unsigned char md5_checksum [16], md5_read;
+    unsigned char md5_checksum[16], md5_read;
     int num_tag_strings;
-    char **tag_strings;
+    char * *tag_strings;
 } WavpackConfig;
 
 #define CONFIG_HYBRID_FLAG      8       // hybrid mode
@@ -255,7 +255,7 @@ int WavpackGetNumChannels (WavpackContext *wpc);
 int WavpackGetChannelMask (WavpackContext *wpc);
 int WavpackGetReducedChannels (WavpackContext *wpc);
 int WavpackGetFloatNormExp (WavpackContext *wpc);
-int WavpackGetMD5Sum (WavpackContext *wpc, unsigned char data [16]);
+int WavpackGetMD5Sum (WavpackContext *wpc, unsigned char data[16]);
 uint32_t WavpackGetWrapperBytes (WavpackContext *wpc);
 unsigned char *WavpackGetWrapperData (WavpackContext *wpc);
 void WavpackFreeWrapper (WavpackContext *wpc);
@@ -279,7 +279,7 @@ int WavpackWriteTag (WavpackContext *wpc);
 WavpackContext *WavpackOpenFileOutput (WavpackBlockOutput blockout, void *wv_id, void *wvc_id);
 int WavpackSetConfiguration (WavpackContext *wpc, WavpackConfig *config, uint32_t total_samples);
 int WavpackAddWrapper (WavpackContext *wpc, void *data, uint32_t bcount);
-int WavpackStoreMD5Sum (WavpackContext *wpc, unsigned char data [16]);
+int WavpackStoreMD5Sum (WavpackContext *wpc, unsigned char data[16]);
 int WavpackPackInit (WavpackContext *wpc);
 int WavpackPackSamples (WavpackContext *wpc, int32_t *sample_buffer, uint32_t sample_count);
 int WavpackFlushSamples (WavpackContext *wpc);

@@ -9,16 +9,15 @@
 #import <Cocoa/Cocoa.h>
 @class XADArchiveParser, XADString;
 
-@interface DTPartialArchiveParser : NSObject 
-{
-	NSString * searchString;
-	NSData * foundData;
+@interface DTPartialArchiveParser : NSObject {
+    NSString *searchString;
+    NSData *foundData;
 }
 
 - (id)initWithPath:(NSString *)archivePath searchString:(NSString *)search;
 - (NSData *)searchResult;
 
--(void)archiveParser:(XADArchiveParser *)parser foundEntryWithDictionary:(NSDictionary *)dict;
--(BOOL)archiveParsingShouldStop:(XADArchiveParser *)parser;
+- (void)archiveParser:(XADArchiveParser *)parser foundEntryWithDictionary:(NSDictionary *)dict;
+- (BOOL)archiveParsingShouldStop:(XADArchiveParser *)parser;
 
 @end

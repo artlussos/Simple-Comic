@@ -14,22 +14,21 @@
 #undef UInt16
 #undef UInt64
 
-@interface XADLZMAHandle:CSStreamHandle
-{
-	CSHandle *parent;
-	off_t startoffs;
+@interface XADLZMAHandle : CSStreamHandle {
+    CSHandle *parent;
+    off_t startoffs;
 
-	CLzmaDec lzma;
+    CLzmaDec lzma;
 
-	uint8_t inbuffer[16*1024];
-	int bufbytes,bufoffs;
+    uint8_t inbuffer[16*1024];
+    int bufbytes, bufoffs;
 }
 
--(id)initWithHandle:(CSHandle *)handle propertyData:(NSData *)propertydata;
--(id)initWithHandle:(CSHandle *)handle length:(off_t)length propertyData:(NSData *)propertydata;
--(void)dealloc;
+- (id)initWithHandle:(CSHandle *)handle propertyData:(NSData *)propertydata;
+- (id)initWithHandle:(CSHandle *)handle length:(off_t)length propertyData:(NSData *)propertydata;
+- (void)dealloc;
 
--(void)resetStream;
--(int)streamAtMost:(int)num toBuffer:(void *)buffer;
+- (void)resetStream;
+- (int) streamAtMost:(int)num toBuffer:(void *)buffer;
 
 @end

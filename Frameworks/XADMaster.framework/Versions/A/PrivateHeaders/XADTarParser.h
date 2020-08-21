@@ -3,20 +3,19 @@
 
 // TODO later: Multivolume tar.
 
-@interface XADTarParser:XADMacArchiveParser
-{
-	NSData *currentGlobalHeader;
+@interface XADTarParser : XADMacArchiveParser {
+    NSData *currentGlobalHeader;
 }
 
-+(int)requiredHeaderSize;
-+(BOOL)recognizeFileWithHandle:(CSHandle *)handle firstBytes:(NSData *)data name:(NSString *)name;
-+(uint64_t)readOctalNumberInRangeFromBuffer:(NSRange)range buffer:(NSData *)buffer;
-+(BOOL)isTarChecksumCorrect:(NSData *)header checksum:(int)checksum;
++ (int) requiredHeaderSize;
++ (BOOL)recognizeFileWithHandle:(CSHandle *)handle firstBytes:(NSData *)data name:(NSString *)name;
++ (uint64_t)readOctalNumberInRangeFromBuffer:(NSRange)range buffer:(NSData *)buffer;
++ (BOOL)isTarChecksumCorrect:(NSData *)header checksum:(int)checksum;
 
--(void)dealloc;
+- (void)dealloc;
 
--(void)parseWithSeparateMacForks;
--(CSHandle *)rawHandleForEntryWithDictionary:(NSDictionary *)dict wantChecksum:(BOOL)checksum;
--(NSString *)formatName;
+- (void)      parseWithSeparateMacForks;
+- (CSHandle *)rawHandleForEntryWithDictionary:(NSDictionary *)dict wantChecksum:(BOOL)checksum;
+- (NSString *)formatName;
 
 @end

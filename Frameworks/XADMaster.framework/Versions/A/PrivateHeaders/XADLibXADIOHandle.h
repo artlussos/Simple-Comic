@@ -1,5 +1,5 @@
-#import "CSMemoryHandle.h"
 #import "CSInputBuffer.h"
+#import "CSMemoryHandle.h"
 
 typedef int8_t xadINT8;
 typedef int16_t xadINT16;
@@ -19,8 +19,8 @@ typedef void *xadPTR;
 typedef xadUINT32 xadTag;
 
 struct TagItem {
-	xadTag  ti_Tag;
-	xadSize ti_Data;
+    xadTag ti_Tag;
+    xadSize ti_Data;
 };
 
 typedef const struct TagItem *xadTAGPTR;
@@ -32,49 +32,49 @@ struct xadArchiveInfo {}; // dummy definitions
 struct xadMasterBase {};
 
 struct xadInOut {
-  struct xadArchiveInfo * xio_ArchiveInfo;   /* filled by xadIOAlloc */
-  struct xadMasterBase *  xio_xadMasterBase; /* filled by xadIOAlloc */
-  xadERROR                xio_Error;         /* cleared */
-  xadUINT32               xio_Flags;         /* filled by xadIOAlloc, functions or user */
+    struct xadArchiveInfo *xio_ArchiveInfo;  /* filled by xadIOAlloc */
+    struct xadMasterBase *xio_xadMasterBase; /* filled by xadIOAlloc */
+    xadERROR xio_Error;                      /* cleared */
+    xadUINT32 xio_Flags;                     /* filled by xadIOAlloc, functions or user */
 
-  /* xio_GetFunc and xio_PutFunc are filled by xadIOAlloc or user */
-  xadUINT8 (*xio_GetFunc)(struct xadInOut *);
-  xadPTR                  xio_GetFuncPrivate;
-  xadUINT8 (*xio_PutFunc)(struct xadInOut *, xadUINT8);
-  xadPTR                  xio_PutFuncPrivate;
+    /* xio_GetFunc and xio_PutFunc are filled by xadIOAlloc or user */
+    xadUINT8 (*xio_GetFunc)(struct xadInOut *);
+    xadPTR xio_GetFuncPrivate;
+    xadUINT8 (*xio_PutFunc)(struct xadInOut *, xadUINT8);
+    xadPTR xio_PutFuncPrivate;
 
-  void (*xio_InFunc)(struct xadInOut *, xadUINT32);
-  xadPTR                  xio_InFuncPrivate;
-  xadSize                 xio_InSize;
-  xadSize                 xio_InBufferSize;
-  xadSize                 xio_InBufferPos;
-  xadUINT8 *              xio_InBuffer;
-  xadUINT32               xio_BitBuf;        /* for xadIOGetBits functions */
-  xadUINT16               xio_BitNum;        /* for xadIOGetBits functions */
+    void (*xio_InFunc)(struct xadInOut *, xadUINT32);
+    xadPTR xio_InFuncPrivate;
+    xadSize xio_InSize;
+    xadSize xio_InBufferSize;
+    xadSize xio_InBufferPos;
+    xadUINT8 *xio_InBuffer;
+    xadUINT32 xio_BitBuf;                    /* for xadIOGetBits functions */
+    xadUINT16 xio_BitNum;                    /* for xadIOGetBits functions */
 
-  xadUINT16               xio_CRC16;         /* crc16 from output functions */
-  xadUINT32               xio_CRC32;         /* crc32 from output functions */
+    xadUINT16 xio_CRC16;                     /* crc16 from output functions */
+    xadUINT32 xio_CRC32;                     /* crc32 from output functions */
 
-  void (*xio_OutFunc)(struct xadInOut *, xadUINT32);
-  xadPTR                  xio_OutFuncPrivate;
-  xadSize                 xio_OutSize;
-  xadSize                 xio_OutBufferSize;
-  xadSize                 xio_OutBufferPos;
-  xadUINT8 *              xio_OutBuffer;
+    void (*xio_OutFunc)(struct xadInOut *, xadUINT32);
+    xadPTR xio_OutFuncPrivate;
+    xadSize xio_OutSize;
+    xadSize xio_OutBufferSize;
+    xadSize xio_OutBufferPos;
+    xadUINT8 *xio_OutBuffer;
 
-  /* These 3 can be reused. Algorithms should be prepared to find this
-     initialized! The window, alloc always has to use xadAllocVec. */
-  xadSize                 xio_WindowSize;
-  xadSize                 xio_WindowPos;
-  xadUINT8 *              xio_Window;
+    /* These 3 can be reused. Algorithms should be prepared to find this
+       initialized! The window, alloc always has to use xadAllocVec. */
+    xadSize xio_WindowSize;
+    xadSize xio_WindowPos;
+    xadUINT8 *xio_Window;
 
-  /* If the algorithms need to remember additional data for next run, this
-     should be passed as argument structure of type (void **) and allocated
-     by the algorithms themself using xadAllocVec(). */
+    /* If the algorithms need to remember additional data for next run, this
+       should be passed as argument structure of type (void **) and allocated
+       by the algorithms themself using xadAllocVec(). */
 
-	// Extra fields for use by the xadIO emulation
-	CSHandle *inputhandle;
-	NSMutableData *outputdata;
+    // Extra fields for use by the xadIO emulation
+    CSHandle *inputhandle;
+    NSMutableData *outputdata;
 };
 
 /* setting BufferPos to buffer size activates first time read! */
@@ -92,23 +92,23 @@ struct xadInOut {
 
 /* allocates the xadInOut structure and the buffers */
 struct xadInOut *xadIOAlloc(xadUINT32 flags,
-struct xadArchiveInfo *ai, struct xadMasterBase *xadMasterBase);
+                            struct xadArchiveInfo *ai, struct xadMasterBase *xadMasterBase);
 
 /* writes the buffer out */
 xadERROR xadIOWriteBuf(struct xadInOut *io);
 
 #define xadIOGetChar(io)   (*((io)->xio_GetFunc))((io))      /* reads one byte */
-#define xadIOPutChar(io,a) (*((io)->xio_PutFunc))((io), (a)) /* stores one byte */
+#define xadIOPutChar(io, a) (*((io)->xio_PutFunc))((io), (a)) /* stores one byte */
 
 /* This skips any left bits and rounds up the whole to next byte boundary. */
 /* Sometimes needed for block-based algorithms, where there blocks are byte aligned. */
 #define xadIOByteBoundary(io) ((io)->xio_BitNum = 0)
 
 /* The read bits function only read the bits without flushing from buffer. This is
-done by DropBits. Some compressors need this method, as the flush different amount
-of data than they read in. Normally the GetBits functions are used.
-When including the source file directly, do not forget to set the correct defines
-to include the necessary functions. */
+   done by DropBits. Some compressors need this method, as the flush different amount
+   of data than they read in. Normally the GetBits functions are used.
+   When including the source file directly, do not forget to set the correct defines
+   to include the necessary functions. */
 
 /* new bytes inserted from left, get bits from right end, max 32 bits, no checks */
 xadUINT32 xadIOGetBitsLow(struct xadInOut *io, xadUINT8 bits);
@@ -127,40 +127,39 @@ void xadIODropBitsHigh(struct xadInOut *io, xadUINT8 bits);
 
 
 
-@interface XADLibXADIOHandle:CSMemoryHandle
-{
-	CSHandle *parent;
-	BOOL unpacked;
+@interface XADLibXADIOHandle : CSMemoryHandle {
+    CSHandle *parent;
+    BOOL unpacked;
 
-	off_t inlen,outlen;
-	uint8_t inbuf[XIDBUFSIZE],outbuf[XIDBUFSIZE];
-	struct xadInOut iostruct;
+    off_t inlen, outlen;
+    uint8_t inbuf[XIDBUFSIZE], outbuf[XIDBUFSIZE];
+    struct xadInOut iostruct;
 }
 
--(id)initWithHandle:(CSHandle *)handle;
--(id)initWithHandle:(CSHandle *)handle length:(off_t)outlength;
--(void)dealloc;
+- (id)initWithHandle:(CSHandle *)handle;
+- (id)initWithHandle:(CSHandle *)handle length:(off_t)outlength;
+- (void)dealloc;
 
--(off_t)fileSize;
--(off_t)offsetInFile;
--(BOOL)atEndOfFile;
+- (off_t)fileSize;
+- (off_t)offsetInFile;
+- (BOOL) atEndOfFile;
 
--(void)seekToFileOffset:(off_t)offs;
--(void)seekToEndOfFile;
+- (void)seekToFileOffset:(off_t)offs;
+- (void)seekToEndOfFile;
 //-(void)pushBackByte:(int)byte;
--(int)readAtMost:(int)num toBuffer:(void *)buffer;
--(void)writeBytes:(int)num fromBuffer:(const void *)buffer;
+- (int)readAtMost:(int)num toBuffer:(void *)buffer;
+- (void)writeBytes:(int)num fromBuffer:(const void *)buffer;
 
--(NSData *)fileContents;
--(NSData *)remainingFileContents;
--(NSData *)readDataOfLength:(int)length;
--(NSData *)readDataOfLengthAtMost:(int)length;
--(NSData *)copyDataOfLength:(int)length;
--(NSData *)copyDataOfLengthAtMost:(int)length;
+- (NSData *)fileContents;
+- (NSData *)remainingFileContents;
+- (NSData *)readDataOfLength:(int)length;
+- (NSData *)readDataOfLengthAtMost:(int)length;
+- (NSData *)copyDataOfLength:(int)length;
+- (NSData *)copyDataOfLengthAtMost:(int)length;
 
--(void)runUnpacker;
--(struct xadInOut *)ioStructWithFlags:(xadUINT32)flags;
--(xadINT32)unpackData;
+- (void)             runUnpacker;
+- (struct xadInOut *)ioStructWithFlags:(xadUINT32)flags;
+- (xadINT32)         unpackData;
 
 @end
 
@@ -199,8 +198,18 @@ void xadIODropBitsHigh(struct xadInOut *io, xadUINT8 bits);
 #define XADMEMF_CLEAR   (1L << 16)
 #define XADMEMF_PUBLIC  (1L << 0)
 
-static inline xadPTR xadAllocVec(xadSize size, xadUINT32 flags) { return calloc(size,1); }
-static inline void xadFreeObject(xadPTR object,xadTag tag, ...) { free(object); }
-static inline void xadFreeObjectA(xadPTR object,xadTAGPTR tags) { free(object); }
-static inline void xadCopyMem(const void *s,xadPTR d,xadSize size) { memmove(d,s,(size_t)size); }
+static inline xadPTR xadAllocVec(xadSize size, xadUINT32 flags) {
+    return calloc(size, 1);
+}
 
+static inline void xadFreeObject(xadPTR object, xadTag tag, ...) {
+    free(object);
+}
+
+static inline void xadFreeObjectA(xadPTR object, xadTAGPTR tags) {
+    free(object);
+}
+
+static inline void xadCopyMem(const void *s, xadPTR d, xadSize size) {
+    memmove(d, s, (size_t)size);
+}
