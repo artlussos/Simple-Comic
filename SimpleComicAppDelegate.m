@@ -136,7 +136,7 @@ static NSArray *allAvailableStringEncodings(void){
     NSStringEncoding encoding;
     while (encodings[counter] != NSNotFound) {
         if (encodings[counter] != 101) {
-            encoding = CFStringConvertEncodingToNSStringEncoding(encodings[counter]);
+            encoding = CFStringConvertEncodingToNSStringEncoding((CFStringEncoding)encodings[counter]);
         } else {
             encoding = 101;
         }
