@@ -772,7 +772,7 @@
 
                 [iconImage lockFocus];
                 [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-                [[selectedPage pageImage] drawInRect:drawRect fromRect:cropRect operation:NSCompositeSourceOver fraction:1];
+                [[selectedPage pageImage] drawInRect:drawRect fromRect:cropRect operation:NSCompositingOperationSourceOver fraction:1];
                 [iconImage unlockFocus];
 
                 NSImage *shadowImage = [[NSImage alloc] initWithSize:NSMakeSize(512, 512)];
@@ -784,7 +784,7 @@
 
                 [shadowImage lockFocus];
                 [thumbShadow set];
-                [iconImage drawInRect:NSMakeRect(16, 16, 496, 496) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
+                [iconImage drawInRect:NSMakeRect(16, 16, 496, 496) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];
                 [shadowImage unlockFocus];
 
                 [[NSWorkspace sharedWorkspace] setIcon:shadowImage forFile:archivePath options:0];
@@ -1141,10 +1141,10 @@
     BOOL valid = YES;
     int state;
     if ([menuItem action] == @selector(toggleFullScreen:)) {
-        state = [[self window] isFullscreen] ? NSOnState : NSOffState;
+        state = [[self window] isFullscreen] ? NSControlStateValueOn : NSControlStateValueOff;
         [menuItem setState:state];
     } else if ([menuItem action] == @selector(changeTwoPage:)) {
-        state = [[session valueForKey:TSSTTwoPageSpread] boolValue] ? NSOnState : NSOffState;
+        state = [[session valueForKey:TSSTTwoPageSpread] boolValue] ? NSControlStateValueOn : NSControlStateValueOff;
         [menuItem setState:state];
     } else if ([menuItem action] == @selector(changePageOrder:)) {
         if ([[session valueForKey:TSSTPageOrder] boolValue]) {
@@ -1175,13 +1175,13 @@
     } else if ([menuItem action] == @selector(removePages:)) {
         valid = ![[session valueForKey:TSSTViewRotation] intValue];
     } else if ([menuItem tag] == 400) {
-        state = [[session valueForKey:TSSTPageScaleOptions] intValue] == 0 ? NSOnState : NSOffState;
+        state = [[session valueForKey:TSSTPageScaleOptions] intValue] == 0 ? NSControlStateValueOn : NSControlStateValueOff;
         [menuItem setState:state];
     } else if ([menuItem tag] == 401) {
-        state = [[session valueForKey:TSSTPageScaleOptions] intValue] == 1 ? NSOnState : NSOffState;
+        state = [[session valueForKey:TSSTPageScaleOptions] intValue] == 1 ? NSControlStateValueOn : NSControlStateValueOff;
         [menuItem setState:state];
     } else if ([menuItem tag] == 402) {
-        state = [[session valueForKey:TSSTPageScaleOptions] intValue] == 2 ? NSOnState : NSOffState;
+        state = [[session valueForKey:TSSTPageScaleOptions] intValue] == 2 ? NSControlStateValueOn : NSControlStateValueOff;
         [menuItem setState:state];
     }
 

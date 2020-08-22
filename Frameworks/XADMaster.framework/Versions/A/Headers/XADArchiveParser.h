@@ -1,12 +1,12 @@
-#import "Checksums.h"
-#import "CSHandle.h"
-#import "XADException.h"
-#import "XADPath.h"
-#import "XADRegex.h"
-#import "XADResourceFork.h"
-#import "XADSkipHandle.h"
-#import "XADString.h"
 #import <Foundation/Foundation.h>
+#import <XADMaster/Checksums.h>
+#import <XADMaster/CSHandle.h>
+#import <XADMaster/XADException.h>
+#import <XADMaster/XADPath.h>
+#import <XADMaster/XADRegex.h>
+#import <XADMaster/XADResourceFork.h>
+#import <XADMaster/XADSkipHandle.h>
+#import <XADMaster/XADString.h>
 
 extern NSString *XADFileNameKey;
 extern NSString *XADCommentKey;
