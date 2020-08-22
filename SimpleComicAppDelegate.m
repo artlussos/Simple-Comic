@@ -745,7 +745,7 @@ static NSArray *allAvailableStringEncodings(void){
 - (NSStringEncoding)archive:(XADArchive *)archive
             encodingForData:(NSData *)data
                       guess:(NSStringEncoding)guess
-                 confidence:(float)confidence
+                 confidence:(CGFloat)confidence
 {
     NSString *testText = [[NSString alloc] initWithData:data encoding:guess];
     if (confidence < 0.8 || !testText) {

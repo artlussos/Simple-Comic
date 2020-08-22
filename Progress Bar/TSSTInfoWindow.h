@@ -16,21 +16,21 @@
 @interface TSSTInfoWindow : NSPanel {
 }
 
-- (void)caretAtPoint:(NSPoint)point size:(NSSize)size withLimitLeft:(float)left right:(float)right;
+- (void)caretAtPoint:(NSPoint)point size:(NSSize)size withLimitLeft:(CGFloat)left right:(CGFloat)right;
 - (void)centerAtPoint:(NSPoint)center;
-- (void)resizeToDiameter:(float)diameter;
+- (void)resizeToDiameter:(CGFloat)diameter;
 
 @end
 
 
 
 @interface TSSTInfoView : NSView {
-    float caretPosition;
+    CGFloat caretPosition;
     BOOL bordered;
 }
 
 @property (assign) BOOL bordered;
-@property (nonatomic, assign) float caretPosition;
+@property (nonatomic, assign) CGFloat caretPosition;
 
 @end
 

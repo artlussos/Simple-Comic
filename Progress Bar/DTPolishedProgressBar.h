@@ -38,8 +38,8 @@
     int currentValue;           /* The progress bar is filled to this level. */
     BOOL leftToRight;           /* The direction of the porgress bar. */
     NSRect progressRect;     /* This is the section of the view. Users can mouse over and click here. */
-    float horizontalMargin;     /* How much room is given for the text on either side. */
-    float cornerRadius;
+    CGFloat horizontalMargin;     /* How much room is given for the text on either side. */
+    CGFloat cornerRadius;
 
     NSGradient *emptyGradient;      /* This is the color of the unfilled bar. */
     NSGradient *barGradient;            /* The color of the filled bar. */
@@ -62,9 +62,9 @@
 @property (assign) int currentValue;
 
 @property (assign) NSRect progressRect;
-@property (assign) float horizontalMargin;
+@property (assign) CGFloat horizontalMargin;
 
-@property (assign) float cornerRadius;
+@property (assign) CGFloat cornerRadius;
 @property (retain) NSGradient *emptyGradient;
 @property (retain) NSGradient *barGradient;
 @property (retain) NSGradient *shadowGradient;

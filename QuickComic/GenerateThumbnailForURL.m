@@ -64,8 +64,8 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
         } else {
 //            NSLog(@"crop");
             canvasRect.size = fitSizeInSize(maxSize, cropRect.size);
-            float vertScale = canvasRect.size.height / CGImageGetHeight(currentImage);
-            float horScale = canvasRect.size.width / CGImageGetWidth(currentImage);
+            CGFloat vertScale = canvasRect.size.height / CGImageGetHeight(currentImage);
+            CGFloat horScale = canvasRect.size.width / CGImageGetWidth(currentImage);
             drawRect.origin = CGPointMake(-(cropRect.origin.x), -(cropRect.origin.y));
             drawRect.size = CGSizeMake(cropRect.size.width / horScale, cropRect.size.height / vertScale);
         }

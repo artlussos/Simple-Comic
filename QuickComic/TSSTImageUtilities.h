@@ -33,7 +33,7 @@
 // function that adjusts an NSSize by the amount designated
 // in argument "scale"
 // Return is an integer size.
-CGSize scaleSize(CGSize aSize, float scale);
+CGSize scaleSize(CGSize aSize, CGFloat scale);
 CGSize fitSizeInSize(CGSize constraint, CGSize size);
 
 

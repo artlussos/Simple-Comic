@@ -115,8 +115,7 @@
 - (void)startAnimationForImage:(NSImage *)image
 {
     id testImageRep = [image bestRepresentationForRect:NSZeroRect context:[NSGraphicsContext currentContext] hints:nil];
-    int frameCount;
-    float frameDuration;
+    CGFloat frameDuration;
     NSDictionary *animationInfo;
     if ([testImageRep class] == [NSBitmapImageRep class]) {
         frameCount = [[testImageRep valueForProperty:NSImageFrameCount] intValue];
@@ -138,7 +137,7 @@
 - (void)animateImage:(NSTimer *)timer
 {
     NSMutableDictionary *animationInfo = [NSMutableDictionary dictionaryWithDictionary:[timer userInfo]];
-    float frameDuration;
+    CGFloat frameDuration;
     NSImage *pageImage = [[animationInfo valueForKey:@"imageNumber"] intValue] == 1 ? firstPageImage : secondPageImage;
     if ([animationInfo valueForKey:@"pageImage"] != pageImage || sessionController == nil) {
         return;
@@ -347,9 +346,9 @@
         break;
     }
 
-    float power = [[[NSUserDefaults standardUserDefaults] valueForKey:TSSTLoupePower] floatValue];
-    float scale;
-    float remainder;
+    CGFloat power = [[[NSUserDefaults standardUserDefaults] valueForKey:TSSTLoupePower] floatValue];
+    CGFloat scale;
+    CGFloat remainder;
     NSRect firstFragment = NSZeroRect;
     NSRect secondFragment = NSZeroRect;
     NSSize zoomSize;
@@ -456,9 +455,9 @@
     [scrollView reflectScrolledClipView:clipView];
 }
 
-- (NSSize)combinedImageSizeForZoom:(float)zoomScale
+- (NSSize)combinedImageSizeForZoom:(CGFloat)zoomScale
 {
-//    float zoomScale = (float)(10.0 + level) / 10.0;
+//    CGFloat zoomScale = (CGFloat)(10.0 + level) / 10.0;
     NSSize firstSize = firstPageImage ? [firstPageImage size] : NSZeroSize;
     NSSize secondSize = secondPageImage ? [secondPageImage size] : NSZeroSize;
 
@@ -489,13 +488,13 @@
     secondPageRect = NSZeroRect;
     NSRect visibleRect = [[self enclosingScrollView] documentVisibleRect];
     NSRect frameRect = [self frame];
-    float xpercent = NSMidX(visibleRect) / frameRect.size.width;
-    float ypercent = NSMidY(visibleRect) / frameRect.size.height;
+    CGFloat xpercent = NSMidX(visibleRect) / frameRect.size.width;
+    CGFloat ypercent = NSMidY(visibleRect) / frameRect.size.height;
     NSSize imageSize = [self combinedImageSizeForZoom:[[[sessionController session] valueForKey:TSSTZoomLevel] floatValue]];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     NSSize viewSize = NSZeroSize;
-    float scaleToFit;
+    CGFloat scaleToFit;
     int scaling = [[[sessionController session] valueForKey:TSSTPageScaleOptions] intValue];
     scaling = [sessionController currentPageIsText] ? 2 : scaling;
     switch (scaling) {
@@ -524,7 +523,7 @@
         break;
     }
 
-    viewSize = NSMakeSize(roundf(viewSize.width), roundf(viewSize.height));
+    viewSize = NSMakeSize(round(viewSize.width), round(viewSize.height));
     [self setFrameSize:viewSize];
 
     if (![[defaults valueForKey:TSSTConstrainScale] boolValue] &&
@@ -557,8 +556,8 @@
         firstPageRect.origin = imageRect.origin;
     }
 
-    float xOrigin = viewSize.width * xpercent;
-    float yOrigin = viewSize.height * ypercent;
+    CGFloat xOrigin = viewSize.width * xpercent;
+    CGFloat yOrigin = viewSize.height * ypercent;
     NSPoint recenter = NSMakePoint(xOrigin - visibleRect.size.width / 2, yOrigin - visibleRect.size.height / 2);
     if (recenter.x != INFINITY && recenter.y != INFINITY) {
         [self scrollPoint:recenter];
@@ -615,7 +614,7 @@
     }
 
     pageRect.origin = NSMakePoint(selection.origin.x - pageRect.origin.x, selection.origin.y - pageRect.origin.y);
-    float scaling = originalSize.height / pageRect.size.height;
+    CGFloat scaling = originalSize.height / pageRect.size.height;
     pageRect = NSMakeRect(pageRect.origin.x * scaling,
                           pageRect.origin.y * scaling,
                           selection.size.width * scaling,
@@ -646,13 +645,13 @@
         loupeDiameter = loupeDiameter > 500 ? 500 : loupeDiameter;
         [defaultsController setValue:@(loupeDiameter) forKey:TSSTLoupeDiameter];
     } else if ((modifier & NSEventModifierFlagOption) && [theEvent deltaY]) {
-        float loupePower = [[defaultsController valueForKey:TSSTLoupePower] floatValue];
+        CGFloat loupePower = [[defaultsController valueForKey:TSSTLoupePower] floatValue];
         loupePower += [theEvent deltaY] > 0 ? 1 : -1;
         loupePower = loupePower < 2 ? 2 : loupePower;
         loupePower = loupePower > 6 ? 6 : loupePower;
         [defaultsController setValue:@(loupePower) forKey:TSSTLoupePower];
     } else if (scaling == 1) {
-        float deltaX = [theEvent deltaX];
+        CGFloat deltaX = [theEvent deltaX];
         if (deltaX != 0.0) {
             [theEvent trackSwipeEventWithOptions:NSEventSwipeTrackingLockDirection
                         dampenAmountThresholdMin:-1.0
@@ -694,7 +693,7 @@
     NSRect visible = [[self enclosingScrollView] documentVisibleRect];
     NSPoint scrollPoint = visible.origin;
     BOOL scrolling = NO;
-    float delta = shiftKey ? 50 * 3 : 50;
+    CGFloat delta = shiftKey ? 50 * 3 : 50;
 
     switch ([charNumber unsignedIntValue]) {
     case NSUpArrowFunctionKey:
@@ -878,7 +877,7 @@
     int multiplier = [[[timer userInfo] valueForKey:@"accelerate"] boolValue] ? 3 : 1;
     [[timer userInfo] setValue:currentDate forKey:@"lastTime"];
     NSPoint scrollPoint = visible.origin;
-    int delta = 1000 * difference * multiplier;
+    CGFloat delta = 1000 * difference * multiplier;
     int turn = NOTURN;
     NSString *directionString = nil;
     BOOL turnDirection = [[[sessionController session] valueForKey:TSSTPageOrder] boolValue];
@@ -1032,7 +1031,7 @@
     }
 
     NSPoint clickPoint = [theEvent locationInWindow];
-    int viewSplit = NSWidth([[self enclosingScrollView] frame]) / 2;
+    CGFloat viewSplit = NSWidth([[self enclosingScrollView] frame]) / 2;
     if (NSMouseInRect(clickPoint, [[self enclosingScrollView] frame], [[self enclosingScrollView] isFlipped])) {
         if (clickPoint.x < viewSplit) {
             if ([theEvent modifierFlags] & NSEventModifierFlagOption) {
@@ -1077,8 +1076,8 @@
 - (void)magnifyWithEvent:(NSEvent *)event
 {
     TSSTManagedSession *session = [sessionController session];
-    int scalingOption = [[session valueForKey:TSSTPageScaleOptions] intValue];
-    float previousZoom = [[session valueForKey:TSSTZoomLevel] floatValue];
+    NSInteger scalingOption = [[session valueForKey:TSSTPageScaleOptions] integerValue];
+    CGFloat previousZoom = [[session valueForKey:TSSTZoomLevel] floatValue];
     if (scalingOption != 0) {
         previousZoom = NSWidth([self imageBounds]) / [self combinedImageSizeForZoom:1].width;
     }
@@ -1103,14 +1102,14 @@
 {
     NSSize total = imageBounds.size;
     NSSize visible = [[self enclosingScrollView] documentVisibleRect].size;
-    return (visible.width < roundf(total.width));
+    return (visible.width < round(total.width));
 }
 
 - (BOOL)verticalScrollIsPossible
 {
     NSSize total = imageBounds.size;
     NSSize visible = [[self enclosingScrollView] documentVisibleRect].size;
-    return (visible.height < roundf(total.height));
+    return (visible.height < round(total.height));
 }
 
 - (void)resetCursorRects

@@ -31,7 +31,7 @@
 #import "TSSTImageUtilities.h"
 
 
-NSSize sizeConstrainedByDimension(NSSize size, float dimension){
+NSSize sizeConstrainedByDimension(NSSize size, CGFloat dimension){
 //    if(size.width > dimension || size.height > dimension)
 //    {
     if (1 > size.height / size.width) {
@@ -44,7 +44,7 @@ NSSize sizeConstrainedByDimension(NSSize size, float dimension){
     return size;
 }
 
-NSSize scaleSize(NSSize aSize, float scale){
+NSSize scaleSize(NSSize aSize, CGFloat scale){
     if (NSEqualSizes(aSize, NSZeroSize)) {
         return NSZeroSize;
     }
@@ -63,8 +63,8 @@ NSRect rectWithSizeCenteredInRect(NSSize size, NSRect rect){
             size = scaleSize(size, NSWidth(rect) / size.width);
         }
     }
-    float x = rect.origin.x + ((rect.size.width - size.width) / 2);
-    float y = rect.origin.y + ((rect.size.height - size.height) / 2);
+    CGFloat x = rect.origin.x + ((rect.size.width - size.width) / 2);
+    CGFloat y = rect.origin.y + ((rect.size.height - size.height) / 2);
 
     return NSMakeRect(x, y, size.width, size.height);
 }
@@ -98,7 +98,7 @@ NSPoint centerPointOfRect(NSRect rect){
     return point;
 }
 
-NSBezierPath *roundedRectWithCornerRadius(NSRect aRect, float radius){
+NSBezierPath *roundedRectWithCornerRadius(NSRect aRect, CGFloat radius){
     NSBezierPath *path = [NSBezierPath bezierPath];
     radius = MIN(radius, 0.5f * MIN(NSWidth(aRect), NSHeight(aRect)));
     NSRect rect = NSInsetRect(aRect, radius, radius);

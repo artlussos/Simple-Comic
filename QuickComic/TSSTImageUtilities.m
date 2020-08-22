@@ -30,7 +30,7 @@
 #import "TSSTImageUtilities.h"
 
 
-CGSize scaleSize(CGSize aSize, float scale){
+CGSize scaleSize(CGSize aSize, CGFloat scale){
     CGSize outputSize;
     outputSize.width = (aSize.width * scale);
     outputSize.height = (aSize.height * scale);

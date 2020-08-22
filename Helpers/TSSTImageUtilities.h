@@ -29,11 +29,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-NSSize sizeScalaedToDimension(NSSize size, float dimension);
+NSSize sizeScalaedToDimension(NSSize size, CGFloat dimension);
 
-NSSize sizeConstrainedByDimension(NSSize size, float dimension);
+NSSize sizeConstrainedByDimension(NSSize size, CGFloat dimension);
 
-NSSize scaleSize(NSSize aSize, float scale);
+NSSize scaleSize(NSSize aSize, CGFloat scale);
 
 NSRect rectWithSizeCenteredInRect(NSSize size, NSRect rect);
 
@@ -43,7 +43,7 @@ NSImage *imageScaledToSizeFromImage(NSSize size, NSImage *image);
 
 NSPoint centerPointOfRect(NSRect rect);
 
-NSBezierPath *roundedRectWithCornerRadius(NSRect aRect, float radius);
+NSBezierPath *roundedRectWithCornerRadius(NSRect aRect, CGFloat radius);
 
 CGImageRef CGImageRefNamed(NSString *name);
 

@@ -105,7 +105,7 @@ enum PageSelectionMode {
     BOOL newSession;
 
     enum PageSelectionMode pageSelectionInProgress;
-    float savedZoom;
+    CGFloat savedZoom;
 }
 
 @property (retain) NSArray *pageSortDescriptor;
