@@ -48,7 +48,7 @@
     [self registerForDraggedTypes:@[NSFilenamesPboardType]];
 }
 
-- (id)initWithFrame:(NSRect)aRectangle; {
+- (id)initWithFrame:(NSRect)aRectangle {
     if ((self = [super initWithFrame:aRectangle])) {
         [self setFirstPage:nil secondPageImage:nil];
         scrollKeys = 0;
@@ -115,10 +115,11 @@
 - (void)startAnimationForImage:(NSImage *)image
 {
     id testImageRep = [image bestRepresentationForRect:NSZeroRect context:[NSGraphicsContext currentContext] hints:nil];
+    NSInteger frameCount;
     CGFloat frameDuration;
     NSDictionary *animationInfo;
     if ([testImageRep class] == [NSBitmapImageRep class]) {
-        frameCount = [[testImageRep valueForProperty:NSImageFrameCount] intValue];
+        frameCount = [[testImageRep valueForProperty:NSImageFrameCount] integerValue];
         if (frameCount > 1) {
             animationInfo = @{@"imageNumber": @1,
                               @"pageImage": firstPageImage,
@@ -138,15 +139,15 @@
 {
     NSMutableDictionary *animationInfo = [NSMutableDictionary dictionaryWithDictionary:[timer userInfo]];
     CGFloat frameDuration;
-    NSImage *pageImage = [[animationInfo valueForKey:@"imageNumber"] intValue] == 1 ? firstPageImage : secondPageImage;
+    NSImage *pageImage = [[animationInfo valueForKey:@"imageNumber"] integerValue] == 1 ? firstPageImage : secondPageImage;
     if ([animationInfo valueForKey:@"pageImage"] != pageImage || sessionController == nil) {
         return;
     }
 
     NSBitmapImageRep *testImageRep = (NSBitmapImageRep *)[pageImage bestRepresentationForRect:NSZeroRect context:[NSGraphicsContext currentContext] hints:nil];
-    int loopCount = [[animationInfo valueForKey:@"loopCount"] intValue];
-    int frameCount = ([[testImageRep valueForProperty:NSImageFrameCount] intValue] - 1);
-    int currentFrame = [[testImageRep valueForProperty:NSImageCurrentFrame] intValue];
+    NSInteger loopCount = [[animationInfo valueForKey:@"loopCount"] integerValue];
+    NSInteger frameCount = ([[testImageRep valueForProperty:NSImageFrameCount] integerValue] - 1);
+    NSInteger currentFrame = [[testImageRep valueForProperty:NSImageCurrentFrame] integerValue];
 
     currentFrame = currentFrame < frameCount ? (currentFrame + 1) : 0;
     if (currentFrame == 0 && loopCount > 1) {
@@ -495,7 +496,7 @@
 
     NSSize viewSize = NSZeroSize;
     CGFloat scaleToFit;
-    int scaling = [[[sessionController session] valueForKey:TSSTPageScaleOptions] intValue];
+    NSInteger scaling = [[[sessionController session] valueForKey:TSSTPageScaleOptions] integerValue];
     scaling = [sessionController currentPageIsText] ? 2 : scaling;
     switch (scaling) {
     case 0:
@@ -527,7 +528,7 @@
     [self setFrameSize:viewSize];
 
     if (![[defaults valueForKey:TSSTConstrainScale] boolValue] &&
-        [[[sessionController session] valueForKey:TSSTPageScaleOptions] intValue] != 0) {
+        [[[sessionController session] valueForKey:TSSTPageScaleOptions] integerValue] != 0) {
         if (viewSize.width / viewSize.height < imageSize.width / imageSize.height) {
             scaleToFit = viewSize.width / imageSize.width;
         } else {
@@ -635,11 +636,11 @@
 
     NSInteger modifier = [theEvent modifierFlags];
     NSUserDefaults *defaultsController = [NSUserDefaults standardUserDefaults];
-    int scaling = [[[sessionController session] valueForKey:TSSTPageScaleOptions] intValue];
+    NSInteger scaling = [[[sessionController session] valueForKey:TSSTPageScaleOptions] integerValue];
     scaling = [sessionController currentPageIsText] ? 2 : scaling;
 
     if ((modifier & NSEventModifierFlagCommand) && [theEvent deltaY]) {
-        int loupeDiameter = [[defaultsController valueForKey:TSSTLoupeDiameter] intValue];
+        NSInteger loupeDiameter = [[defaultsController valueForKey:TSSTLoupeDiameter] integerValue];
         loupeDiameter += [theEvent deltaY] > 0 ? 30 : -30;
         loupeDiameter = loupeDiameter < 150 ? 150 : loupeDiameter;
         loupeDiameter = loupeDiameter > 500 ? 500 : loupeDiameter;
@@ -874,11 +875,11 @@
     NSRect visible = [[self enclosingScrollView] documentVisibleRect];
     NSDate *currentDate = [NSDate date];
     NSTimeInterval difference = [currentDate timeIntervalSinceDate:[[timer userInfo] valueForKey:@"lastTime"]];
-    int multiplier = [[[timer userInfo] valueForKey:@"accelerate"] boolValue] ? 3 : 1;
+    NSInteger multiplier = [[[timer userInfo] valueForKey:@"accelerate"] boolValue] ? 3 : 1;
     [[timer userInfo] setValue:currentDate forKey:@"lastTime"];
     NSPoint scrollPoint = visible.origin;
     CGFloat delta = 1000 * difference * multiplier;
-    int turn = NOTURN;
+    NSInteger turn = NOTURN;
     NSString *directionString = nil;
     BOOL turnDirection = [[[sessionController session] valueForKey:TSSTPageOrder] boolValue];
     BOOL finishTurn = NO;

@@ -124,12 +124,12 @@ cornerRadius, emptyGradient, barGradient, shadowGradient, highlightColor, number
 
     NSRect rightStringRect = NSMakeRect(NSMaxX(progressRect) + self.cornerRadius, NSMinY(bounds), self.horizontalMargin, NSHeight(bounds));
     NSRect leftStringRect = NSMakeRect(0, NSMinY(bounds), self.horizontalMargin, NSHeight(bounds));
-    NSString *totalString = [NSString stringWithFormat:@"%i", maxValue];
+    NSString *totalString = [NSString stringWithFormat:@"%li", (long)maxValue];
     NSSize stringSize = [totalString sizeWithAttributes:self.numberStyle];
     NSRect stringRect = rectWithSizeCenteredInRect(stringSize, self.leftToRight ? rightStringRect : leftStringRect);
     [totalString drawInRect:stringRect withAttributes:self.numberStyle];
 
-    NSString *progressString = [NSString stringWithFormat:@"%i", self.currentValue + 1];
+    NSString *progressString = [NSString stringWithFormat:@"%li", self.currentValue + 1];
     stringSize = [progressString sizeWithAttributes:self.numberStyle];
     stringRect = rectWithSizeCenteredInRect(stringSize, self.leftToRight ? leftStringRect : rightStringRect);
     [progressString drawInRect:stringRect withAttributes:self.numberStyle];
@@ -200,16 +200,16 @@ cornerRadius, emptyGradient, barGradient, shadowGradient, highlightColor, number
    Translates a point within the view to an index between 0 and maxValue.
    Progress indicator direction affects the index.
  */
-- (int)indexForPoint:(NSPoint)point
+- (NSInteger)indexForPoint:(NSPoint)point
 {
-    int index;
+    CGFloat index;
     if (leftToRight) {
         index = (point.x - NSMinX(progressRect)) / NSWidth(progressRect) * maxValue;
     } else {
         index = (NSMaxX(progressRect) - point.x) / NSWidth(progressRect) * maxValue;
     }
     index = index >= maxValue ? maxValue - 1 : index;
-    return index;
+    return (NSInteger)index;
 }
 
 @end

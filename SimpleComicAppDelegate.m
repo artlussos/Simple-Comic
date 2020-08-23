@@ -283,7 +283,7 @@ static NSArray *allAvailableStringEncodings(void){
         }
     }
 
-    int reply = NSTerminateNow;
+    NSApplicationTerminateReply reply = NSTerminateNow;
     /* TODO: some day I really need to add the fallback error handling */
     if (![self saveContext]) {
         // Error handling wasn't implemented. Fall back to displaying a "quit anyway" panel.
@@ -745,7 +745,7 @@ static NSArray *allAvailableStringEncodings(void){
 - (NSStringEncoding)archive:(XADArchive *)archive
             encodingForData:(NSData *)data
                       guess:(NSStringEncoding)guess
-                 confidence:(CGFloat)confidence
+                 confidence:(float)confidence
 {
     NSString *testText = [[NSString alloc] initWithData:data encoding:guess];
     if (confidence < 0.8 || !testText) {
@@ -767,7 +767,7 @@ static NSArray *allAvailableStringEncodings(void){
         }
 
         if (index != NSNotFound) {
-            self.encodingSelection = index;
+            self.encodingSelection = (NSInteger)index;
         }
 
         encodingTestData = data;

@@ -283,15 +283,15 @@
 
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSData *fileData;
-    int collision = 0;
+    NSInteger collision = 0;
     TSSTManagedGroup *nestedDescription;
     NSString *extension, *archivePath = nil;
     NSString *fileName = nil;
-    int counter, archivedFilesCount = [imageArchive numberOfEntries];
+    NSInteger counter, archivedFilesCount = [imageArchive numberOfEntries];
     NSError *error;
     if ([imageArchive isSolid]) {
         do {
-            archivePath = [NSString stringWithFormat:@"SC-images-%i", collision];
+            archivePath = [NSString stringWithFormat:@"SC-images-%li", (long)collision];
             archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent:archivePath];
             ++collision;
         } while (![fileManager createDirectoryAtPath:archivePath withIntermediateDirectories:YES attributes:nil error:&error]);
@@ -316,7 +316,7 @@
 
                 collision = 0;
                 do {
-                    archivePath = [NSString stringWithFormat:@"%i-%@", collision, fileName];
+                    archivePath = [NSString stringWithFormat:@"%li-%@", (long)collision, fileName];
                     archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent:archivePath];
                     ++collision;
                 } while ([fileManager fileExistsAtPath:archivePath]);
@@ -337,10 +337,10 @@
             } else if ([extension isEqualToString:@"pdf"]) {
                 nestedDescription = [NSEntityDescription insertNewObjectForEntityForName:@"PDF" inManagedObjectContext:[self managedObjectContext]];
                 archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
-                int collision = 0;
+                NSInteger collision = 0;
                 while ([fileManager fileExistsAtPath:archivePath]) {
                     ++collision;
-                    fileName = [NSString stringWithFormat:@"%i-%@", collision, fileName];
+                    fileName = [NSString stringWithFormat:@"%li-%@", (long)collision, fileName];
                     archivePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
                 }
                 fileData = [imageArchive contentsOfEntry:counter];

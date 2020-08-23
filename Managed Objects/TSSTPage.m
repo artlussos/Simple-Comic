@@ -71,7 +71,7 @@ static NSSize monospaceCharacterSize;
 
     NSTextTab *tabStop;
     NSMutableArray *tabStops = [NSMutableArray array];
-    int tabSize;
+    NSInteger tabSize;
     CGFloat tabLocation;
     /* Loop through the tab stops */
     for (tabSize = 8; tabSize < 120; tabSize += 8) {
@@ -119,7 +119,7 @@ static NSSize monospaceCharacterSize;
 
     CGFloat defaultAspect = 1;
     CGFloat aspect = [[self valueForKey:@"aspectRatio"] floatValue];
-    if (!aspect) {
+    if (aspect == 0) {
         NSData *imageData = [self pageData];
         [self setOwnSizeInfoWithData:imageData];
         aspect = [[self valueForKey:@"aspectRatio"] floatValue];
@@ -219,7 +219,7 @@ static NSSize monospaceCharacterSize;
 {
     NSData *textData;
     if ([self valueForKey:@"index"]) {
-        textData = [[self valueForKeyPath:@"group"] dataForPageIndex:[[self valueForKey:@"index"] intValue]];
+        textData = [[self valueForKeyPath:@"group"] dataForPageIndex:[[self valueForKey:@"index"] integerValue]];
     } else {
         textData = [NSData dataWithContentsOfFile:[self valueForKey:@"imagePath"]];
     }
@@ -271,7 +271,7 @@ static NSSize monospaceCharacterSize;
     NSData *imageData = nil;
     TSSTManagedGroup *group = [self valueForKey:@"group"];
     if ([self valueForKey:@"index"]) {
-        int entryIndex = [[self valueForKey:@"index"] intValue];
+        NSInteger entryIndex = [[self valueForKey:@"index"] integerValue];
         imageData = [group dataForPageIndex:entryIndex];
     } else if ([self valueForKey:@"imagePath"]) {
         imageData = [NSData dataWithContentsOfFile:[self valueForKey:@"imagePath"]];
